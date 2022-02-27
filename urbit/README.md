@@ -50,10 +50,9 @@ The best place is the [awesome-urbit](https://github.com/urbit/awesome-urbit) re
 There's no one place to browse all announced in-development apps. It's best to check in the following places for news
 regarding in-development apps:
 - [Grants/Bounties page](https://urbit.org/grants)
-- Bounties page
 - "Development" chat in the "Urbit Community" group
 - Urbit company groups:
-    - Bank of Urbit
+    - Bank of Urbit (`~finnem/the-bank-of-urbit`)
     - Dalten Collective
     - dcSpark
     - Tirrel

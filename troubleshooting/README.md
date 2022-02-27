@@ -14,10 +14,10 @@ will do nothing.
 
 Disconnect the dojo from the thread by pressing `backspace` or `Ctrl+H`. Then, run `:spider|kill` in the dojo to stop
 whichever thread was responsible. Note that this command will kill all currently-running threads. Unfortunately, while
-there is a way to list the IDs of all currently-running threads (`:spiker/tree`), there is no way to tie those IDs to a
+there is a way to list the IDs of all currently-running threads (`:spider/tree`), there is no way to tie those IDs to a
 particular thread.
 
 ***source:*** *`~finmep-lanteb`, `~tinnus-napbus`*\
-***context:*** *TODO*\
-***location:*** *TODO*\
-***documented:*** *TODO*
+***context:*** *NONE*\
+***location:*** https://urbit.org/using/os/shell#troubleshooting \
+***documented:*** *partially*
