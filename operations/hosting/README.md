@@ -4,21 +4,29 @@ This section contains information about hosting ships.
 
 ## Contents
 
-[Configuring SSL/TLS for remote host](#configuring-ssltls-for-remote-host) \
+[Access web interface over SSH](#access-web-interface-over-ssh) \
 [Hosting on a Raspberry Pi](#hosting-on-a-raspberry-pi) \
 [Hosting on a VPS](#hosting-on-a-vps) \
 [Monitoring uptime of ships](#monitoring-uptime-of-ships)
 
-### Configuring SSL/TLS for remote host
+### Access web interface over SSH
 
-See the guide linked below for details.
+If you create a host definition for your planet in your `~/.ssh/config` like so:
+```
+Host urbit
+Hostname <your server IP>
+User urbit
+Port 22
+IdentityFile ~/.ssh/<your ssh key to the server>
+LocalForward 9000 127.0.0.1:8080
+ServerAliveInterval 60
+```
+then if you establish an SSH connection to the server hosting your ship, you can connect to `localhost:9000` in your
+local browser to access the Landscape web interface of your ship over the SSH tunnel, completely bypassing HTTP.
 
-***source:*** *`~silsyn-wathep` `~sitful-hatred` `~tinnus-napbus`*\
-***context:*** *NONE*\
-***location:*** \
-https://urbit.org/using/os/basics#dns-setup \
-https://subject.network/posts/caddyserver-urbit-tls/ \
-***documented:*** *yes*
+***source:*** *`~matwel-mitreb`*\
+***context:*** *NONE* \
+***location:*** *TODO*
 
 ### Hosting on a Raspberry Pi
 
@@ -27,19 +35,17 @@ RAM and SD reader access. Most likely, you would want a Pi with 4GB+ RAM and an 
 
 ***source:*** *`~monted-tallex`*\
 ***context:*** https://botter-nidnul.github.io/Steps_to_Urbit_on_Raspberry_Pi.html \
-***location:*** *TODO*\
-***documented:*** *TODO*
+***location:*** *TODO*
 
 ### Hosting on a VPS
 
-A GitHub repo containing easily-configurable files for automatically setting up a VPS environment to host one or more
-Urbit ships (and, optionally, one or more websites) is available
+A GitHub repo containing easily-configurable files for automatically setting up a VPS environment to host Urbit ships,
+as well as (optionally) websites and MinIO is available
 [here](https://github.com/ashelkovnykov/urbit-hosting).
 
 ***source:*** *`~datder-sonnet`, `~finmep-lanteb`*\
 ***context:*** *NONE*\
-***location:*** *TODO*\
-***documented:*** *TODO*
+***location:*** *TODO*
 
 ### Monitoring uptime of ships
 
@@ -49,5 +55,4 @@ of Borgmon, a Google-internal, time-series monitoring system.
 
 ***source:*** *`~silsyn-wathep`*\
 ***context:*** *NONE*\
-***location:*** *TODO*\
-***documented:*** *TODO*
+***location:*** *TODO*

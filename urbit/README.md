@@ -1,67 +1,32 @@
 # Urbit
 
-This section contains miscellaneous tidbits about Urbit and being an Urbit pilot.
+This section contains miscellaneous tidbits about Urbit.
 
 ## Contents
 
 [Fake-ship networking](#fake-ship-networking) \
-[How does Urbit time work?](#how-does-urbit-time-work) \
-[Is there a place to browse apps?](#is-there-a-place-to-browse-apps) \
-[Is there a place to browse in-development apps?](#is-there-a-place-to-browse-in-development-apps) \
 [What are brass, solid, and ivory pills?](#what-are-brass-solid-and-ivory-pills) \
-[What do the different symbols at the start of dojo commands mean?](#what-do-the-different-symbols-at-the-start-of-dojo-commands-mean) \
+[What are the Hoon naming conventions?](#what-are-the-hoon-naming-conventions) \
 [What is `lens`?](#what-is-lens) \
-[What is `herb`?](#what-is-herb) \
-[Where can I find all the dojo commands?](#where-can-i-find-all-the-dojo-commands)
+[What is `herb`?](#what-is-herb)
 
 ### Fake-ship networking
 
 Fake ships run on their own network using fake keys and do not communicate with live-net ships in any way. Multiple
-fake ships running on the same machine can network with each other.
+fake ships running on the same machine can network with each other. However, these fake ships still have 'realistic'
+packet routing: fake galaxies can talk to each other, but fake stars/planets cannot - unless they have the appropriate
+fake sponsors running, too.
 
-***source:*** *`~monted-tallex`*\
+```
+~tex & ~mex:            GOOD
+~tex & ~bintex:         GOOD
+~mex & ~bintex:         BAD
+~tex, ~mex, & ~bintex:  GOOD
+```
+
+***source:*** *`~finmep-lanteb`, `~monted-tallex`*\
 ***context:*** *NONE*\
-***location:*** *TODO*\
-***documented:*** *TODO*
-
-### How does Urbit time work?
-
-Some facts about Urbit time:
-- The base unit of time is `1/2^64` seconds
-- `1` second is `2^16`
-- Epoch is ~292.5 billion years ago
-
-***source:*** *`~rabsef-bicrym`, `~sarpen-laplux`, `~tinnus-napbus`*\
-***context:*** https://github.com/urbit/urbit/blob/b8da026c5e0d7667c30f55298232da0f55004650/pkg/npm/api/lib/lib.ts \
-***location:*** *TODO*\
-***documented:*** *TODO*
-
-### Is there a place to browse apps?
-
-The best place is the [awesome-urbit](https://github.com/urbit/awesome-urbit) repo.
-
-***source:*** *`~timluc-miptev`*\
-***context:*** *NONE* \
-***location:*** *TODO*\
-***documented:*** *TODO*
-
-### Is there a place to browse in-development apps?
-
-There's no one place to browse all announced in-development apps. It's best to check in the following places for news
-regarding in-development apps:
-- [Grants/Bounties page](https://urbit.org/grants)
-- "Development" chat in the "Urbit Community" group
-- Urbit company groups:
-    - Bank of Urbit (`~finnem/the-bank-of-urbit`)
-    - Dalten Collective
-    - dcSpark
-    - Tirrel
-    - Uqbar
-
-***source:*** *`~timluc-miptev`*\
-***context:*** *NONE* \
-***location:*** *TODO*\
-***documented:*** *TODO*
+***location:*** https://developers.urbit.org/guides/core/environment#fake-ship-networking
 
 ### What are brass, solid, and ivory pills?
 
@@ -77,27 +42,51 @@ The solid pill is a fast-boot for development.
 The ivory pill is for runtime support and is not bootable.
 
 ***source:*** *`~tinnus-napbus`*\
-***context:*** *NONE*\
-***location:*** https://urbit.org/docs/glossary/pill \
-***documented:*** *false*
+***context:*** \
+- https://operators.urbit.org/manual/os/dojo-tools#brass \
+- https://operators.urbit.org/manual/os/dojo-tools#solid \
+***location:*** https://urbit.org/docs/glossary/pill
 
-### What do the different symbols at the start of dojo commands mean?
+### What are the Hoon naming conventions?
 
-```
-+foo 'some' 'args'        ::  run %/gen/foo.hoon with args
-|foo 'some' 'args'        ::  poke %hood with output of %/gen/foo.hoon with args
-:foo|bar 'some' 'args'    ::  poke %foo with output of %/gen/bar.hoon with args
-:foo ['some' 'args']      ::  poke %foo with args as a %noun mark
-:foo &bar ['some' 'args'] ::  poke %foo with args as a %bar mark
-:~zod/foo ['some' 'args'] ::  poke %foo on ~zod with args as a %noun mark
--foo 'some' 'args'        ::  run thread %foo with args
--foo!bar 'some' 'args'    ::  run thread %bar in desk %foo with args
-```
+In early Hoon, there were three naming conventions:
+- hyperlapidary
+- lapidary
+- freehand
 
-***source:*** *`~tinnus-napbus`*\
-***context:*** *NONE*\
-***location:*** *TODO*\
-***documented:*** *TODO*
+#### Hyperlapidary
+
+Only to be used for extremely regular and straightforward namespaces. Specifically designed to be as difficult as
+possible to refactor. Most often found in the most core sections of Arvo.
+- Arms must be gates or doors
+  - Gate names should be 3 letters long and should aim to have mnemonic significance (e.g. `dec`)
+  - Door names should be 2 letters long and should aim to resemble pronouns (e.g. `my`)
+- Conventional recursive structures have standard names
+  - The head of a list is `i`, and the tail is `t`
+  - The node in a tree is `n`, and the children are `l` and `r` respectively
+- Other structures should be short tuples, no wider than 5 elements
+  - The legs are named `p`, `q`, `r`, `s`, and `t` in order of appearance
+- Variables and arguments should be named alphabetically with a single letter in order of appearance (e.g. `a`, `b`,
+  `c`, etc.)
+
+#### Lapidary
+
+The ordinary style of Hoon. Most of Arvo is written in lapidary style.
+- Arms must be four letters long
+  - They may or may not be English words that may or may not be cleverly relevant
+- All variables, arguments, attributes, etc. must be three letters long
+  - Preferably consonant-vowel-consonant
+  - If the same string is used more than once in a file, it should represent exactly the same concept
+    - As if it were copy+pasted there
+
+#### Freehand
+
+God mode. Reserved for top-layer software, prototyping, and casual coding.
+- No rules.
+
+***source:*** *`~sorreg-namtyv`*\
+***context:*** https://web.archive.org/web/20140424223310/http://urbit.org/doc/hoon/tut/7/ \
+***location:*** *TODO*
 
 ### What is `lens`?
 
@@ -105,8 +94,7 @@ The ivory pill is for runtime support and is not bootable.
 
 ***source:*** *`~hastuc-dibtux`*\
 ***context:*** *NONE*\
-***location:*** *TODO*\
-***documented:*** *TODO*
+***location:*** *TODO*
 
 ### What is `herb`?
 
@@ -115,15 +103,4 @@ slated to be replaced by a new vane.
 
 ***source:*** *`~master-morzod`*\
 ***context:*** *NONE* \
-***location:*** *TODO*\
-***documented:*** *TODO*
-
-### Where can I find all the dojo commands?
-
-The `+help` command will print out all dojo commands, as well as a short documentation blurb (if they have one). In
-addition, tab-based auto-completion works in the dojo (including STL functions).
-
-***source:*** *`~rovnys-ricfer`*\
-***context:*** *NONE* \
-***location:*** *TODO*\
-***documented:*** *TODO*
+***location:*** *TODO*
