@@ -16,6 +16,7 @@ This section contains information about Hoon/Arvo development.
 [Error: `fire-core -fork-type.#! expected-fork-to-be-core fire-type`](#error-fire-core--fork-type-expected-fork-to-be-core-fire-type) \
 [Error: `mint-vain` or `-need.[i=@ t=it(@)] -have.%~` when using `list`](#error-mint-vain-or--needi-tit--have-when-using-list) \
 [Functions: core vs. door, gate vs. trap](#functions-core-vs-door-gate-vs-trap) \
+[Functions: gates with default values](#functions-gates-with-default-values) \
 [Operators: what does the `,` operator do?](#operators-what-does-the--operator-do) \
 [Parsing: `cord` vs. `tape`](#parsing-cord-vs-tape) \
 [Runes: how does bucket (`$^`) work?](#runes-how-does-bucket--work) \
@@ -148,11 +149,14 @@ An easy way to check from inside an Urbit ship is to run the following commands:
 ```
 > =l -build-file %/lib/my-file/hoon
 > (my-gate:l 'some' 'args')
+
+> =j -build-file /=/some-desk/=/lib/my-other-file/hoon
+> (my-other-gate:j 'some' 'args')
 ```
 
 ***source:*** *`~timluc-miptev`*\
 ***context:*** *NONE*\
-***location:*** *TODO*
+***location:*** https://operators.urbit.org/manual/os/dojo-tools#-build-file
 
 ### Casting: pull type out of gate output
 
@@ -300,6 +304,20 @@ code:
 - https://developers.urbit.org/reference/glossary/gate \
 - https://developers.urbit.org/reference/glossary/trap \
   ***location:*** https://developers.urbit.org/guides/core/hoon-school/F-cores#repeating-yourself-using-a-trap
+
+### Functions: gates with default values
+
+The `|:` rune produces gates which have default values for the sample. If the sample has multiple values, but you only
+want to override one (or just not all) of them, you need to call the gate using the `%*` rune:
+```
+> =f |:  [a=1 b=2]  (add a b)
+> %*  $  f  b  4  ==
+5
+```
+
+***source:*** *`~tinnus-napbus`* \
+***context:*** https://developers.urbit.org/reference/hoon/rune/cen#-centar \
+***location:*** *TODO*
 
 ### Operators: what does the `,` operator do?
 
