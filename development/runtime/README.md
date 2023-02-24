@@ -4,29 +4,13 @@ This section contains information about runtime (Vere) development.
 
 ## Contents
 
-[Build: how do I compile changes to the runtime source code?](#build-how-do-i-compile-changes-to-the-runtime-source-code) \
 [Jets: `bail` error code usage](#jets-bail-error-code-usage) \
 [Profiling: AddressSanitizer](#profiling-addresssanitizer) \
 [Profiling: JSON Tracing](#profiling-json-tracing) \
 [Profiling: Valgrind](#profiling-valgrind) \
+[Testing: how should we test jets, since Vere and Arvo live in different repos?](#testing-how-should-we-test-jets-since-vere-and-arvo-live-in-different-repos) \
 [What is the difference between the Vere interpreter and Vere daemon?](#what-is-the-difference-between-the-vere-interpreter-and-vere-daemon) \
 [What is the directory structure of `urbit/pkg/urbit`?](#what-is-the-directory-structure-of-urbitpkgurbit) \
-
-### Build: how do I compile changes to the runtime source code?
-
-To test if changes to Vere (the Urbit runtime environment) compile, you need to perform the following steps:
-
-1. Install [nix](https://nix.dev/tutorials/install-nix)
-2. Run `make build` from the root of the Urbit source code directory
-3. Launch your test ship with the newly compiled binaries:
-```shell
-user@linux:~$ chmod 770 /nix/store/[some hash]-urbit-[version]/urbit
-user@linux:~$ /nix/store/[some hash]-urbit-[version]/urbit path/to/piers/zod
-```
-
-***source:*** *`~finmep-lanteb`*\
-***context:*** *TODO*\
-***location:*** *TODO*
 
 ### Jets: `bail` error code usage
 
@@ -119,6 +103,17 @@ valgrind --tool=memcheck --leak-check=yes --track-origins=yes --log-file=memchec
 
 ***source:*** *`~finmep-lanteb`, `~master-morzod`*\
 ***context:*** https://valgrind.org \
+***location:*** *TODO*
+
+### Testing: how should we test jets, since Vere and Arvo live in different repos?
+
+The jets tests run in both repos, under CPU_DEBUG and MEMORY_DEBUG. Both repos can refer to the specific version of the
+other repo that it wants. In `urbit/urbit`, the `vere-version` file specifies the binary against which it should be
+tested. In `urbit/vere`, the `solid_pill`, `ivory_pill`, and `urbit` settings in `WORKSPACE.bazel` specify the version
+of the kernel against which it should be tested.
+
+***source:*** *`~wicdev-wisryt`*\
+***context:*** https://github.com/urbit/urbit, https://github.com/urbit/vere \
 ***location:*** *TODO*
 
 ### What is the difference between the Vere interpreter and Vere daemon?
