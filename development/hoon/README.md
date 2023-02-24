@@ -9,7 +9,6 @@ This section contains information about Hoon/Arvo development.
 [Best Practice: disable `%spot` hints](#best-practice-disable-spot-hints) \
 [Best Practice: when to use lead cores?](#best-practice-when-to-use-lead-cores) \
 [Build: do I need to compile a new pill for changes to Urbit source code?](#build-do-i-need-to-compile-a-new-pill-for-changes-to-urbit-source-code) \
-[Build: how do I compile changes to Urbit source code?](#build-how-do-i-compile-changes-to-urbit-source-code) \
 [Build: how do I test that `lib`/`sur` files are correct?](#build-how-do-i-test-that-libsur-files-are-correct) \
 [Casting: pull type out of gate output](#casting-pull-type-out-of-gate-output) \
 [Casting: what is "normalization"?](#casting-what-is-normalization) \
@@ -70,76 +69,6 @@ No, but depending on the size of the changes that you're making, to how many shi
 with how many people you need to share the changes, it may make development much faster.
 
 ***source:*** *`~master-morzod`*\
-***context:*** *TODO*\
-***location:*** *TODO*
-
-### Build: how do I compile changes to Urbit source code?
-
-Once you've modified some Urbit source code files, you can test if they compile by applying the changes to your test
-ship. To do so, launch your test ship and run the following set of commands:
-
-```
-In dojo:
-~zod:dojo> |mount %base
-
-Then in terminal:
-user@linux:~$ cp -rfL path/to/source/arvo/* path/to/piers/zod/base/
-
-Then in dojo:
-~zod:dojo> |commit %base
-```
-
-Applications/agents that depend on the modified files will be recompiled using the new source code. It's possible that
-an error may occur during this process (due to a bug in the new code). In this case, the underlying issue will need to
-be fixed, and the above commands (excluding `|mount %base`) repeated.
-
-Some changes (for example changes to particularly core code or changes to large chunks of the code in multiple desks)
-may require much of the ship to be recompiled. For such critical/massive changes, the following set of commands is more
-useful, as it will split the recompilation into multiple phases:
-
-```
-In dojo:
-~zod:dojo> |mount %base
-~zod:dojo> |mount %garden
-~zod:dojo> |mount %landscape
-~zod:dojo> |mount %bitcoin
-~zod:dojo> |mount %webterm
-~zod:dojo> 
-~zod:dojo> |suspend %webterm
-~zod:dojo> |suspend %bitcoin
-~zod:dojo> |suspend %landscape
-~zod:dojo> |suspend %garden
-
-Then in terminal:
-user@linux:~$ cp -rfL path/to/source/arvo/* path/to/piers/zod/base/
-user@linux:~$ cp -rfL path/to/source/garden/* path/to/piers/zod/garden/
-user@linux:~$ cp -rfL path/to/source/landscape/* path/to/piers/zod/landscape/
-user@linux:~$ cp -rfL path/to/source/bitcoin/* path/to/piers/zod/bitcoin/
-user@linux:~$ cp -rfL path/to/source/webterm/* path/to/piers/zod/webterm/
-
-Then in dojo:
-~zod:dojo> |commit %
-~zod:dojo> 
-~zod:dojo> |commit %garden
-~zod:dojo> |revive %garden
-~zod:dojo> 
-~zod:dojo> |commit %landscape
-~zod:dojo> |revive %landscape
-~zod:dojo> 
-~zod:dojo> |commit %bitcoin
-~zod:dojo> |revive %bitcoin
-~zod:dojo> 
-~zod:dojo> |commit %webterm
-~zod:dojo> |revive %webterm
-~zod:dojo> 
-~zod:dojo> |unmount %webterm
-~zod:dojo> |unmount %bitcoin
-~zod:dojo> |unmount %landscape
-~zod:dojo> |unmount %garden
-~zod:dojo> |unmount %base
-```
-
-***source:*** *`~finmep-lanteb`, `~master-morzod`, `~timluc-miptev`*\
 ***context:*** *TODO*\
 ***location:*** *TODO*
 
