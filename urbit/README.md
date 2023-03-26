@@ -4,13 +4,25 @@ This section contains miscellaneous tidbits about Urbit.
 
 ## Contents
 
+[Can I build a foreign desk using Clay?](#can-i-build-a-foreign-desk-using-clay) \
 [Debug dashboard](#debug-dashboard)\
 [Fake-ship networking](#fake-ship-networking) \
 [I messaged my ship from a comet and saw a breach notification. What happened?](#i-messaged-my-ship-from-a-comet-and-saw-a-breach-notification-what-happened) \
+[Is a sequence of moves in an event guaranteed to terminate?](#is-a-sequence-of-moves-in-an-event-guaranteed-to-terminate) \
 [What are brass, solid, and ivory pills?](#what-are-brass-solid-and-ivory-pills) \
 [What are the Hoon naming conventions?](#what-are-the-hoon-naming-conventions) \
-[What is `lens`?](#what-is-lens) \
-[What is `herb`?](#what-is-herb)
+[What is an event?](#what-is-an-event) \
+[What is `herb`?](#what-is-herb) \
+[What is `lens`?](#what-is-lens)
+
+### Can I build a foreign desk using Clay?
+
+Yes. If a copy of the foreign desk is downloaded, then `%a` and `%x` `care`s to Clay work for foreign `beak`s. If the
+desk is not downloaded, you would need to manually scry with care `%v` first. 
+
+***source:*** *`~wicdev-wisryt`* \
+***context:*** https://developers.urbit.org/reference/arvo/clay/scry \
+***location:*** https://developers.urbit.org/reference/arvo/clay/scry
 
 ### Debug dashboard
 
@@ -58,6 +70,15 @@ up to the present day, it will receive that breach notification as its updating.
 concerned: it's just your comet catching up to the present state of the network.
 
 ***source:*** *`~finmep-lanteb`*\
+***context:*** *NONE*\
+***location:*** *TODO*
+
+### Is a sequence of moves in an event guaranteed to terminate?
+
+No. For example, this is what a "resubscribe loop" is. This will eventually result in a crash due to stack overflow
+(usually a graceful crash: `bail %meme`).
+
+***source:*** *`~wicdev-wisryt`*\
 ***context:*** *NONE*\
 ***location:*** *TODO*
 
@@ -121,15 +142,21 @@ God mode. Reserved for top-layer software, prototyping, and casual coding.
 ***context:*** https://web.archive.org/web/20140424223310/http://urbit.org/doc/hoon/tut/7/ \
 ***location:*** *TODO*
 
-### What is `%lens`?
+### What is an event?
 
-`%lens` is an agent which runs on your ship and allows you to send dojo commands to a local ship over HTTP. By default,
-it listens on port `12321`.
+An event is one Unix move and all of its children. A Unix move is an external interaction with an Urbit ship that may
+modify its state. Examples include:
+- An Ames packet arrives
+- A Behn timer expires
+- The Clay files for a mounted desk are changed
+- A user types something in the dojo
+- An HTTP request comes in over Eyre
 
-See the [What is `herb`?](#what-is-herb) section below for more info.
+All of these individual moves can set in motion additional moves: the Ames packet might contain a poke to a Gall agent which sets
+off a Clay recompilation. Thus, an event is the entire set of moves set in motion from the initial move.
 
-***source:*** *`~finmep-lanteb`, `~hastuc-dibtux`*\
-***context:*** *NONE*\
+***source:*** *`~wicdev-wisryt`*\
+***context:*** *NONE* \
 ***location:*** *TODO*
 
 ### What is `herb`?
@@ -153,4 +180,15 @@ and the Khan thread-management vane.
 
 ***source:*** *`~finmep-lanteb`, `~master-morzod`*\
 ***context:*** *NONE* \
+***location:*** *TODO*
+
+### What is `%lens`?
+
+`%lens` is an agent which runs on your ship and allows you to send dojo commands to a local ship over HTTP. By default,
+it listens on port `12321`.
+
+See the [What is `herb`?](#what-is-herb) section below for more info.
+
+***source:*** *`~finmep-lanteb`, `~hastuc-dibtux`*\
+***context:*** *NONE*\
 ***location:*** *TODO*

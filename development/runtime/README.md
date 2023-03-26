@@ -11,6 +11,7 @@ This section contains information about runtime (Vere) development.
 [Testing: how should we test jets, since Vere and Arvo live in different repos?](#testing-how-should-we-test-jets-since-vere-and-arvo-live-in-different-repos) \
 [What is the difference between the Vere interpreter and Vere daemon?](#what-is-the-difference-between-the-vere-interpreter-and-vere-daemon) \
 [What is the directory structure of `urbit/pkg/urbit`?](#what-is-the-directory-structure-of-urbitpkgurbit) \
+[What is the kelvin decrement process?](#what-is-the-kelvin-decrement-process)
 
 ### Jets: `bail` error code usage
 
@@ -155,4 +156,44 @@ serf = worker + include + jets + noun + ur
 
 ***source:*** *`~master-morzod`*\
 ***context:*** https://github.com/urbit/urbit/tree/master/pkg/urbit \
+***location:*** *TODO*
+
+### What is the kelvin decrement process?
+
+For the purposes of example, we'll assume that we're decrementing the `hoon.hoon` from kelvin `10` to kelvin `9`.
+
+Note that any time a kelvin is decremented, all subordinate kelvins must also be decremented. The order is: `nock` ->
+`hoon` -> `arvo` -> `lull` -> `zuse`. Therefore, a decrement to the Nock kelvin would decrement all of the kelvins,
+whereas a decrement to the `lull.hoon` kelvin would only additionally decrement the `zuse.hoon` kelvin.
+
+1. Copy jets for the new kelvin in `pkg/noun/jets/tree.c`, if decrementing Hoon kelvin
+    1. Practically, this means creating a new entry in `_d[]` for the new kelvin, which should look similar to the one
+        above it: `{ "k9", 0, 0, _k9_d, no_hashes, 0, (u3j_core*) 9, 0 }`
+    2. It's unlikely that many of the jets changed between kelvins, so keep as much of the existing state as possible.
+        For example, if only the jet for `dec` changed, then you would only need to define new `u3j_core` objects for
+        `_k9_d` and `_9_one_d`:
+        1. ```u3j_core _k9_d[] = { { "one", 3, 0, _139_one_d, no_hashes }, {} };```
+        2.  ```
+            static u3j_core _139_one_d[] = {
+              { "two", 3, 0, _10_two_d, no_hashes },
+              { "add", 7, _10_one_add_a, 0, no_hashes },
+              { "dec", 7, _9_one_add_a,  0, no_hashes },
+              { "div", 7, _10_one_add_a, 0, no_hashes },
+              ...
+              {}
+            };
+            ```
+    3. Remove any old jets code from `pks/noun/jets/tree.c` (e.g. for kelvin `11` or higher)
+2. Decrement the kelvin version(s) in `pkg/vere/pier.c`, object `u3_noun kel`
+3. Decrement the Hoon kelvin version in `pkg/vere/serf.c`, if necessary
+4. Compile the new binary
+5. Check that the current Arvo still works on the binary
+   1. The binary must support Arvo both before and after the update
+6. Decrement the kelvin version(s) in `hoon.hoon`, `arvo.hoon`, `lull.hoon`, and `zuse.hoon` - whichever are necessary
+7. Compile a new ivory pill
+8. Test the new ivory pill on the new binary
+9. Upload the new ivory pill
+
+***source:*** *`~finmep-lanteb`, `~wicdev-wisryt`*\
+***context:*** *TODO* \
 ***location:*** *TODO*
