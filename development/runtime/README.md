@@ -32,14 +32,9 @@ pointers, and reading beyond allocation. Since the only current major implementa
 useful for identifying issues with the Urbit source code.
 
 ASan is built into the `clang` and `gcc` compilers. ASan is enabled during compilation for a binary by adding the
-`-fsanitize=address` flag to the build **and** linker flags. For Urbit, this means adding the following lines after line
-182 in `urbit/pkg/urbit/configure`:
-```
-CFLAGS="${CFLAGS-} -fsanitize=address"
-LDFLAGS="${LDFLAGS-} -fsanitize=address"
-```
-In addition, the tests in `urbit/pkg/urbit/Makefile` need to be disabled, or else the build will fail due to
-LeakSanitizer errors during testing.
+`-fsanitize=address` flag to the build **and** linker flags. This used to be simple using the old dynamic Nix build
+system, but in the new static Bazel system it's a massive issue that has yet to be resolved. However, there
+[is a workaround](https://github.com/urbit/vere/issues/351) that allows ASan to be enabled.
 
 ***source:*** *`~finmep-lanteb`*\
 ***context:***  *TODO*\
@@ -69,7 +64,7 @@ of Vere is written in C, it can be useful for identifying issues with the Urbit 
 To run Vere with Valgrind requires the following process:
 1. Install Valgrind
 2. Make changes to Vere source
-3. Drop `siz_i` on line 760 in `urbit/pkg/urbit/vere/disk.c` to `32212254720`
+3. Drop `siz_i` on line `896` in `urbit/pkg/urbit/vere/disk.c` to `0x780000000`
 4. Rebuild the Urbit binaries
 
 #### Callgrind
@@ -99,7 +94,7 @@ the project: [valgrind.h](https://sourceware.org/git/?p=valgrind.git;a=blob_plai
 
 To run the Memcheck tool, run the following command to launch your ship:
 ```shell
-valgrind --tool=memcheck --leak-check=yes --track-origins=yes --log-file=memcheck.log ./urbit piers/zod/
+valgrind --tool=memcheck --leak-check=yes --track-origins=yes --trace-children=yes --log-file=memcheck.log ./urbit piers/zod/
 ```
 
 ***source:*** *`~finmep-lanteb`, `~master-morzod`*\
