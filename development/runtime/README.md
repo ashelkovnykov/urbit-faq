@@ -4,14 +4,25 @@ This section contains information about runtime (Vere) development.
 
 ## Contents
 
-[Jets: `bail` error code usage](#jets-bail-error-code-usage) \
+[Errors: `bail`ing on an inner road](#errors-bailing-on-an-inner-road) \
+[Jets: Matching `?-` (wuthep) behaviour](#jets-matching---wuthep-behaviour) \
 [Profiling: AddressSanitizer](#profiling-addresssanitizer) \
 [Profiling: JSON Tracing](#profiling-json-tracing) \
 [Profiling: Valgrind](#profiling-valgrind) \
+[Rune: `?-` (wuthep) behaviour]() \
 [Testing: how should we test jets, since Vere and Arvo live in different repos?](#testing-how-should-we-test-jets-since-vere-and-arvo-live-in-different-repos) \
 [What is the difference between the Vere interpreter and Vere daemon?](#what-is-the-difference-between-the-vere-interpreter-and-vere-daemon) \
 [What is the directory structure of `urbit/pkg/urbit`?](#what-is-the-directory-structure-of-urbitpkgurbit) \
 [What is the kelvin decrement process?](#what-is-the-kelvin-decrement-process)
+
+### Errors: `bail`ing on an inner road
+
+U3 allocations take the road into account, therefore it's safe to `bail` on an inner road at any time. The road will be
+obliterated and all allocations safely deallocated.
+
+***source:*** *`~master-morzod`*\
+***context:*** *TODO*\
+***location:*** *TODO*
 
 ### Jets: `bail` error code usage
 
@@ -23,6 +34,15 @@ and verifying the behaviour via untyped calls (test code fragments using the `sl
 
 ***source:*** *`~master-morzod`*\
 ***context:*** *TODO*\
+***location:*** *TODO*
+
+### Jets: Matching `?-` (wuthep) behaviour
+
+`?-` defaults to the final case in the switch. This is important, for example, when matching behaviour directly with a
+switch.
+
+***source:*** *`~master-morzod`*\
+***context:*** *NONE* \
 ***location:*** *TODO*
 
 ### Profiling: AddressSanitizer

@@ -21,6 +21,11 @@ This section contains information about Hoon/Arvo development.
 [Runes: how does bucket (`$^`) work?](#runes-how-does-bucket--work) \
 [Runes: how does siglus (`~+`) work?](#runes-how-does-siglus--work) \
 [Runes: how does sigtis (`~=`) work?](#runes-how-does-sigtis--work) \
+[Runes: how does tissig (`=~`) work?](#runes-how-does-tissig--work) \
+[Scry: can I virutalize scries?](#scry-can-i-virtualize-scries) \
+[Scry: what if the agent I'm scrying isn't running?](#scry-what-if-the-agent-im-scrying-isnt-running) \
+[Scry: why does `.^` return `(unit (unit))`?](#scry-why-does--return-unit-unit) \
+[Types: recursive types]() \
 [Vanes: Behn inserts src.bowl into timer path](#vanes-behn-inserts-srcbowl-into-timer-path)
 
 ### Auras: how does Urbit time work?
@@ -311,6 +316,68 @@ This allows Hoon to save space when pinning a new result to the subject by refer
 ***source:*** *`~timluc-miptev`*\
 ***context:*** *TODO*\
 ***location:*** https://developers.urbit.org/reference/hoon/rune/sig#-sigtis
+
+### Runes: how does tissig (`=~`) work?
+
+`=~` is a convenient way to compose multiple cores together, though it's rare to see outside of core code (particularly
+kernel vanes). Typically, Clay will automatically compose cores for you when building a `.hoon` file in userspace.
+However, this needs to be done explicitly in kernel space, so Eyre and Iris use `=~` for this purpose.
+
+A non-idiomatic use case is to use `=~` to pass a single object through a chain of expressions; an example of this can
+be found in Ames.
+
+***source:*** *`~watter-parter`*\
+***context:*** *TODO*\
+***location:*** https://developers.urbit.org/reference/hoon/rune/tis#-tissig
+
+### Scry: can I virtualize scries?
+
+There is no way to virtualize scries directly. Doing so requires the help of a vane, as giving userspace the option to
+virtualize scries directly would expose kernel state and violate referential transparency.
+
+***source:*** *`~master-morzod`*\
+***context:*** *TODO*\
+***location:*** *TODO*
+
+### Scry: what if the agent I'm scrying isn't running?
+
+A scry for an agent that doesn't exist will always crash. However, it's possible to check if an agent is installed and
+running using the `u` `care` of a Gall scry:
+```
+.^(? %gu /our/agent/now)
+```
+
+***source:*** *`~tinnus-napbus`*\
+***context:*** *TODO*\
+***location:*** *TODO*
+
+### Scry: why does `.^` return `(unit (unit))`?
+
+- `~`: "This scry path might have existed in the past, or it may exist in the future, but it doesn't exist for the given
+  `cas`."
+- `[~ ~]`: "This scry path doesn't exist, has never existed, and will never exist."
+- `[~ ~ *]`: "This scry path exists and returned the given data."
+
+***source:*** *`~tinnus-napbus`*\
+***context:*** *TODO*\
+***location:*** *TODO*
+
+### Types: recursive types
+
+Recursive types almost always need to have a bunt specified using the `$~` (bucsig) rune to be compiled correctly:
+```
+|%
++$  recurse
+  $~  [*@t ~]
+  $:  name=@t
+      subs=(map @t recurse)
+  ==
+--
+```
+
+***source:*** *`~rovnys-ricfer`*\
+***context:*** *TODO*\
+***location:*** *TODO*
 
 ### Vanes: Behn inserts `src.bowl` into timer path
 

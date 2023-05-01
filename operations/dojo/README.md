@@ -4,15 +4,18 @@ This section contains information about using the Dojo (the Urbit ship terminal)
 
 ## Contents
 
-[Commands: calling threads from another desk](#commands-calling-threads-from-another-desk) \
-[Commands: poke an agent on another ship from dojo](#commands-poke-an-agent-on-another-ship-from-dojo) \
-[Commands: what do the different command symbols mean?](#commands-what-do-the-different-command-symbols-mean) \
+[Command: call thread from custom desk](#command-call-thread-from-custom-desk) \
+[Command: check if ship is live or fake]() \
+[Command: get latest hash of desk](#commands-get-latest-hash-of-desk) \
+[Command: poke an agent on another ship from dojo](#commands-poke-an-agent-on-another-ship-from-dojo) \
+[Command: print jammed noun to dojo](#commands-print-jammed-noun-to-dojo) \
+[Command: what do the different command symbols mean?](#commands-what-do-the-different-command-symbols-mean) \
 [Error: dojo stuck on `%dy-no-prompt`](#error-dojo-stuck-on-dy-no-prompt) \
 [What does `|meld` do?](#what-does-meld-do) \
 [What does `|pack` do?](#what-does-pack-do) \
 [What does the output of `|mass` mean?](#what-does-the-output-of-mass-mean)
 
-### Commands: calling threads from another desk
+### Command: call thread from custom desk
 
 To call a thread `-foo` from the desk `%bar`, use the following command in the dojo:
 ```
@@ -23,7 +26,29 @@ To call a thread `-foo` from the desk `%bar`, use the following command in the d
 ***context:*** *TODO*\
 ***location:*** *TODO*
 
-### Commands: poke an agent on another ship from dojo
+### Command: check if ship is live or fake
+
+The following scry will return true (a.k.a. `%.y` a.k.a. `0`) if a ship is fake (i.e. using fake network keys):
+```
+.^(? %j /=fake=)
+```
+
+***source:*** *`~tinnus-napbus`*\
+***context:*** *TODO*\
+***location:*** *TODO*
+
+### Command: get latest hash of desk
+
+Example - get the latest hash of `%app` on ship `~sampel-palnet`:
+```
+-read %z ~sampel-palnet %app %da now /
+```
+
+***source:*** *`~midden-fabler`*\
+***context:*** *TODO*\
+***location:*** *TODO*
+
+### Command: poke an agent on another ship from dojo
 
 You can poke an agent on another ship from your dojo using the following format:
 `:[SHIP]/[AGENT] [MARK] [VASE]`
@@ -34,7 +59,19 @@ Ex: `:~bacdun/faucet &faucet-action [%open 0x0 0xdead.beef]`
 ***context:*** *NONE*\
 ***location:*** *TODO*
 
-### Commands: what do the different command symbols mean?
+### Command: print jammed noun to dojo
+
+1. Save the jammed noun to a file
+2. Commit the file to a desk in a ship
+3. Load the file using Clay: `=j .^(@ %cx %/tang/jam)`
+4. `cue` the loaded data: `(cue j)`
+    1. Might need to skip over the first 5 bytes if it's a newt-encoded jammed noun: `(cue (rsh [3 5] j))`
+
+***source:*** *`~wicdev-wisryt`*\
+***context:*** *NONE*\
+***location:*** *TODO*
+
+### Command: what do the different command symbols mean?
 
 ```
 +foo 'some' 'args'        ::  run %/gen/foo.hoon with args

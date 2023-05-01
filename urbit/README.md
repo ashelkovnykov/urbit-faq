@@ -7,6 +7,7 @@ This section contains miscellaneous tidbits about Urbit.
 [Can I build a foreign desk using Clay?](#can-i-build-a-foreign-desk-using-clay) \
 [Debug dashboard](#debug-dashboard)\
 [Fake-ship networking](#fake-ship-networking) \
+[How do I update to a specific OTA?](#how-do-i-update-to-a-specific-ota) \
 [I messaged my ship from a comet and saw a breach notification. What happened?](#i-messaged-my-ship-from-a-comet-and-saw-a-breach-notification-what-happened) \
 [Is a sequence of moves in an event guaranteed to terminate?](#is-a-sequence-of-moves-in-an-event-guaranteed-to-terminate) \
 [What are brass, solid, and ivory pills?](#what-are-brass-solid-and-ivory-pills) \
@@ -54,6 +55,47 @@ fake sponsors running, too.
 ***source:*** *`~finmep-lanteb`, `~monted-tallex`*\
 ***context:*** *NONE*\
 ***location:*** https://developers.urbit.org/guides/core/environment#fake-ship-networking
+
+### How do I update to a specific OTA?
+
+If a ship misses several OTAs, applying them all at once can become a blocking issue. The solution is to apply a single
+OTA at a time.
+
+Let's say we want to OTA specifically to the version of Arvo with `zuse` `%420`:
+1. Determine the `cas` (version) of your sponsor's `%kids` desk that you need:
+   1. On the host run `.^(* %cw /=kids=)` to get a cell with the form `[X Y]`. Both are the `cas`: the first number is
+      the numeric version of the current code, and the second is the date since which that version is active. 
+      - Alternatively, it's possible to do the same using `%base` on a ship that has successfully updated past the desired
+        update: `.^(* %cw /=base=)`
+   2. Call `cat /=kids/<cas>/sys/kelvin` with the numeric `cas` from above to see what the `zuse` version is:
+      ```
+      > cat /=kids/130/sys/kelvin
+      [%zuse 415]
+      ```
+   3. Walk the `cas` down until you find the lowest `cas` that returns the desired version of `zuse`. For example:
+      ```
+      > cat /=kids/101/sys/kelvin
+      [%zuse 419]
+      > cat /=kids/100/sys/kelvin
+      [%zuse 420]
+      > cat /=kids/99/sys/kelvin
+      [%zuse 420]
+      > cat /=kids/98/sys/kelvin
+      [%zuse 421]
+      ```
+      In this case, the `cas` we need is `99`.
+2. Upgrade to the specific version using the `cas` from above:
+   ```
+   |merge %base <sponsor> %kids, =cas [%ud <cas>], =gem %only-that
+   ```
+   For example:
+   ```
+   |merge %base ~litzod %kids, =cas [%ud 99], =gem %only-that
+   ```
+
+***source:*** *`~dovsem-bornyl`*\
+***context:*** *TODO*\
+***location:*** *TODO*
 
 ### I messaged my ship from a comet and saw a breach notification. What happened?
 
