@@ -14,7 +14,8 @@ This section contains miscellaneous tidbits about Urbit.
 [What are the Hoon naming conventions?](#what-are-the-hoon-naming-conventions) \
 [What is an event?](#what-is-an-event) \
 [What is `herb`?](#what-is-herb) \
-[What is `lens`?](#what-is-lens)
+[What is `lens`?](#what-is-lens) \
+[What is "remote scry"?](#what-is-remote-scry)
 
 ### Can I build a foreign desk using Clay?
 
@@ -232,5 +233,20 @@ it listens on port `12321`.
 See the [What is `herb`?](#what-is-herb) section below for more info.
 
 ***source:*** *`~finmep-lanteb`, `~hastuc-dibtux`*\
+***context:*** *NONE*\
+***location:*** *TODO*
+
+### What is "remote scry"?
+
+"Remote scry" is an alternative networking protocol to Ames that is implemented in the Fine (fee-nay) vane. It allows
+ships to request data from foreign ships in a more efficient way and without affecting the state or event log of the
+foreign ship.
+
+Using Ames, every message affects the foreign ship state, even if only by updating sequence numbers. Using Fine,
+requests are read-only and globally referentially transparent (responses to identical requests are always identical).
+Since read requests do not affect state, they can be spawned in parallel threads and the results can be cached directly
+in the runtime, short-circuiting even the requirements that the request be handled by Fine in Nock.
+
+***source:*** *`~wicdev-wisryt`*\
 ***context:*** *NONE*\
 ***location:*** *TODO*

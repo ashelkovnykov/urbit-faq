@@ -5,6 +5,7 @@ This section contains information about runtime (Vere) development.
 ## Contents
 
 [Errors: `bail`ing on an inner road](#errors-bailing-on-an-inner-road) \
+[How does Vere track that a ship is "fake"?](#how-does-vere-track-that-a-ship-is-fake) \
 [Jets: Matching `?-` (wuthep) behaviour](#jets-matching---wuthep-behaviour) \
 [Profiling: AddressSanitizer](#profiling-addresssanitizer) \
 [Profiling: JSON Tracing](#profiling-json-tracing) \
@@ -19,6 +20,15 @@ This section contains information about runtime (Vere) development.
 
 U3 allocations take the road into account, therefore it's safe to `bail` on an inner road at any time. The road will be
 obliterated and all allocations safely deallocated.
+
+***source:*** *`~master-morzod`*\
+***context:*** *TODO*\
+***location:*** *TODO*
+
+### How does Vere track that a ship is "fake"?
+
+A fake bit is persisted in the LMDB "META" database. This can be checked by the `fak_o` member in a `u3_pier` object,
+e.g. `c3y == pir_u->fak_o`.
 
 ***source:*** *`~master-morzod`*\
 ***context:*** *TODO*\

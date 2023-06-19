@@ -16,6 +16,7 @@ This section contains information about Hoon/Arvo development.
 [Error: `mint-vain` or `-need.[i=@ t=it(@)] -have.%~` when using `list`](#error-mint-vain-or--needi-tit--have-when-using-list) \
 [Functions: core vs. door, gate vs. trap](#functions-core-vs-door-gate-vs-trap) \
 [Functions: gates with default values](#functions-gates-with-default-values) \
+[Functions: is it bad to recurse on a wet gate?](#functions-is-it-bad-to-recurse-on-a-wet-gate) \
 [Operators: what does the `,` operator do?](#operators-what-does-the--operator-do) \
 [Parsing: `cord` vs. `tape`](#parsing-cord-vs-tape) \
 [Runes: how does bucket (`$^`) work?](#runes-how-does-bucket--work) \
@@ -251,6 +252,15 @@ want to override one (or just not all) of them, you need to call the gate using 
 
 ***source:*** *`~tinnus-napbus`* \
 ***context:*** https://developers.urbit.org/reference/hoon/rune/cen#-centar \
+***location:*** *TODO*
+
+### Functions: is it bad to recurse on a wet gate?
+
+Wet gate recursion is almost never desirable: the `+mull` check is re-performed at each call site, meaning that each
+iteration could potentially have a different type (producing heterogeneous `list`s, for example).
+
+***source:*** *`~master-morzod`* \
+***context:*** *NONE*\
 ***location:*** *TODO*
 
 ### Operators: what does the `,` operator do?

@@ -13,7 +13,9 @@ This section contains information about using the Dojo (the Urbit ship terminal)
 [Error: dojo stuck on `%dy-no-prompt`](#error-dojo-stuck-on-dy-no-prompt) \
 [What does `|meld` do?](#what-does-meld-do) \
 [What does `|pack` do?](#what-does-pack-do) \
-[What does the output of `|mass` mean?](#what-does-the-output-of-mass-mean)
+[What does the output of `|mass` mean?](#what-does-the-output-of-mass-mean) \
+[What is the "base" hash in `+vats`?](#what-is-the-base-hash-in-vats) \
+[What is the "%cz" hash in `+vats`?](#what-is-the-cz-hash-in-vats)
 
 ### Command: call thread from custom desk
 
@@ -149,3 +151,21 @@ The rest of the `|mass` output is used for drilling down to determine what exact
 ***source:*** *`~wicdev-wisryt`*\
 ***context:*** *NONE*\
 ***location:*** https://operators.urbit.org/manual/os/dojo-tools#mass
+
+### What is the "base" hash in `+vats`?
+
+The "base" hash is a `tako`, a commit hash representing the merge-base of the local desk and its remote source. A commit
+hash is a concatenation of two 128-bit truncated SHA-256 hashes of a jammed noun of the head-tagged commit contents
+(see `+make-yaki` in `lull`).
+
+***source:*** *`~master-morzod`*\
+***context:*** *NONE*\
+***location:*** *TODO*
+
+### What is the "%cz" hash in `+vats`?
+
+The "%cz" hash is a Merkle-like hash of the contents of the desk (see `+content-hash` in `clay`).
+
+***source:*** *`~master-morzod`*\
+***context:*** *NONE*\
+***location:*** *https://developers.urbit.org/reference/arvo/clay/scry#z---content-hash*
