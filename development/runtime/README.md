@@ -5,8 +5,15 @@ This section contains information about runtime (Vere) development.
 ## Contents
 
 [Errors: `bail`ing on an inner road](#errors-bailing-on-an-inner-road) \
+[Errors: How are deterministic errors handled?](#errors-how-are-deterministic-errors-handled) \
+[Errors: How are non-deterministic errors handled?](#errors-how-are-non-deterministic-errors-handled) \
+[Errors: Why do some deterministic error cases emit non-deterministic errors?](#errors-why-do-some-deterministic-error-cases-emit-non-deterministic-errors) \
+[Hints: Is it desirable to have hint hooks that can be called before the dynamic hint formula is computed?](#hints-is-it-desirable-to-have-hint-hooks-that-can-be-called-before-the-dynamic-hint-formula-is-computed) \
+[Hints: What should be done with malformed or unrecognized hints?](#hints-what-should-be-done-with-malformed-or-unrecognized-hints) \
 [How does Vere track that a ship is "fake"?](#how-does-vere-track-that-a-ship-is-fake) \
+[Jets: `bail` error code usage](#jets-bail-error-code-usage) \
 [Jets: Matching `?-` (wuthep) behaviour](#jets-matching---wuthep-behaviour) \
+[Jets: When would a jet ever punt?](#jets-when-would-a-jet-ever-punt) \
 [Profiling: AddressSanitizer](#profiling-addresssanitizer) \
 [Profiling: JSON Tracing](#profiling-json-tracing) \
 [Profiling: Valgrind](#profiling-valgrind) \
@@ -22,6 +29,64 @@ U3 allocations take the road into account, therefore it's safe to `bail` on an i
 obliterated and all allocations safely deallocated.
 
 ***source:*** *`~master-morzod`*\
+***context:*** *TODO*\
+***location:*** *TODO*
+
+### Errors: How are deterministic errors handled?
+
+When a deterministic error is encountered, the interpreter should perform clean-up tasks and then return to the previous
+virtualization layer.
+
+***source:*** *`~wicdev-wisryt`*\
+***context:*** *TODO*\
+***location:*** *TODO*
+
+### Errors: How are non-deterministic errors handled?
+
+In Vere, a non-deterministic error is handled by a `longjmp` back to the home road and the entire event being killed
+(note that this is [safe to do at any time](#errors-bailing-on-an-inner-road)).
+
+In Ares, a non-deterministic error is handled by killing the event thread and injecting the stack trace (note that this
+is safe, so long as no heap-allocation has been performed).
+
+***source:*** *`~wicdev-wisryt`, `~ritpub-sipsyl`* \
+***context:*** *TODO*\
+***location:*** *TODO*
+
+### Errors: Why do some deterministic error cases emit non-deterministic errors?
+
+Consider the case where a Nock formula attempts to create a list of `(2^64 + 1)` elements. There's nothing wrong with
+this formula, but no generally available computer of our day would be able to represent this list because it wouldn't
+be able to index it in the interpreter. Therefore, the failure is non-deterministic because the formula is correct but
+an external constraint of which Arvo is unaware is preventing it from being computed.
+
+***source:*** *`~finmep-lanteb`, `~wicdev-wisryt`*\
+***context:*** *TODO*\
+***location:*** *TODO*
+
+### Hints: Is it desirable to have hint hooks that can be called before the dynamic hint formula is computed?
+
+Yes, and they can even return shortcut results. However, the interpreter must still run the dynamic hint formula unless
+it has run this exact code (i.e. dynamic hint formula, nock formula, and subject) successfully once before (or unless
+it's trivially successful, e.g. Nock 1). Otherwise, an interpreter that knows how to handle the hint may incorrectly
+skip malformed hint formulas, whereas an interpreter that doesn't will correctly crash.
+
+***source:*** *`~wicdev-wisryt`*\
+***context:*** *TODO*\
+***location:*** *TODO*
+
+### Hints: What should be done with malformed or unrecognized hints?
+
+Formally, both malformed and unrecognized hints are ignored. It's possible that a hint in the Nock is not for the
+particular interpreter that has encountered it. Just because the current interpreter doesn't recognize the hint, or
+expects it to be formed differently, doesn't mean that all other interpreters do. Technically, the spec also allows the
+interpreter to kill the event, but in practice it's much better to just ignore the hint.
+
+There are two exceptions to the above:
+1. A dynamic hint with a malformed hint Nock formula is invalid
+2. A jet hint that produces an unhandled error in the jet is invalid
+
+***source:*** *`~wicdev-wisryt`*\
 ***context:*** *TODO*\
 ***location:*** *TODO*
 
@@ -53,6 +118,15 @@ switch.
 
 ***source:*** *`~master-morzod`*\
 ***context:*** *NONE* \
+***location:*** *TODO*
+
+### Jets: When would a jet ever punt?
+
+It's perfectly acceptable for a jet to only operate on a subset of a function's domain. Therefore, if it encountered
+input that it was unable to jet, it would punt back to Nock to evaluate the solution using the naive approach.
+
+***source:*** *`~wicdev-wisryt`*\
+***context:*** *TODO*\
 ***location:*** *TODO*
 
 ### Profiling: AddressSanitizer

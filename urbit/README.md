@@ -11,6 +11,7 @@ This section contains miscellaneous tidbits about Urbit.
 [I messaged my ship from a comet and saw a breach notification. What happened?](#i-messaged-my-ship-from-a-comet-and-saw-a-breach-notification-what-happened) \
 [Is a sequence of moves in an event guaranteed to terminate?](#is-a-sequence-of-moves-in-an-event-guaranteed-to-terminate) \
 [What are brass, solid, and ivory pills?](#what-are-brass-solid-and-ivory-pills) \
+[What are "life" and "rift"?](#what-are-life-and-rift) \
 [What are the Hoon naming conventions?](#what-are-the-hoon-naming-conventions) \
 [What is an event?](#what-is-an-event) \
 [What is `herb`?](#what-is-herb) \
@@ -143,6 +144,27 @@ The ivory pill is for runtime support and is not bootable.
 - https://operators.urbit.org/manual/os/dojo-tools#brass \
 - https://operators.urbit.org/manual/os/dojo-tools#solid \
 ***location:*** https://urbit.org/docs/glossary/pill
+
+### What are "life" and "rift"?
+
+"life" is the "key revision" number. Each ship signs its messages with its private key (actually a very large, secret
+number used in a mathematical equation) so that other ships can verify that it truly authored those messages. Getting a
+new key (called "key rotation" or "rotating keys") is like changing the lock on the door to your house; everyone who had
+the old key will need to get the new one.
+
+There are several reasons that a pilot might want to rotate keys:
+1. The pilot has sold the ship, and the new owner wants new keys (just like changing locks after moving into a new house)
+2. The pilot believes his keys have been compromised (just like changing the locks after your keys are stolen)
+3. As a regular routine, to establish [limited perfect forward secrecy](https://en.wikipedia.org/wiki/Forward_secrecy)
+
+"rift" is the "continuity number", i.e. the number of factory resets that  ship has performed. A ship that has never
+performed a factory reset has a rift of 0.
+
+Both life and rift are monotonically increasing whole numbers.
+
+***source:*** *`~finmep-lanteb`*\
+***context:*** https://operators.urbit.org/manual/os/dojo-tools#keys \
+***location:*** *TODO*
 
 ### What are the Hoon naming conventions?
 
