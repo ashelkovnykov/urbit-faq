@@ -12,12 +12,13 @@ This section contains information about runtime (Vere) development.
 [Hints: What should be done with malformed or unrecognized hints?](#hints-what-should-be-done-with-malformed-or-unrecognized-hints) \
 [How does Vere track that a ship is "fake"?](#how-does-vere-track-that-a-ship-is-fake) \
 [Jets: `bail` error code usage](#jets-bail-error-code-usage) \
+[Jets: `lth`, `gth`, and derived code](#jets-lth-gth-and-derived-code) \ 
 [Jets: Matching `?-` (wuthep) behaviour](#jets-matching---wuthep-behaviour) \
 [Jets: When would a jet ever punt?](#jets-when-would-a-jet-ever-punt) \
+[Known issues: Vere memory leak](#known-issues-vere-memory-leak) \
 [Profiling: AddressSanitizer](#profiling-addresssanitizer) \
 [Profiling: JSON Tracing](#profiling-json-tracing) \
 [Profiling: Valgrind](#profiling-valgrind) \
-[Rune: `?-` (wuthep) behaviour]() \
 [Testing: how should we test jets, since Vere and Arvo live in different repos?](#testing-how-should-we-test-jets-since-vere-and-arvo-live-in-different-repos) \
 [What is the difference between the Vere interpreter and Vere daemon?](#what-is-the-difference-between-the-vere-interpreter-and-vere-daemon) \
 [What is the directory structure of `urbit/pkg/urbit`?](#what-is-the-directory-structure-of-urbitpkgurbit) \
@@ -26,7 +27,7 @@ This section contains information about runtime (Vere) development.
 ### Errors: `bail`ing on an inner road
 
 U3 allocations take the road into account, therefore it's safe to `bail` on an inner road at any time. The road will be
-obliterated and all allocations safely deallocated.
+obliterated and all allocations safely deallocated. 
 
 ***source:*** *`~master-morzod`*\
 ***context:*** *TODO*\
@@ -111,10 +112,62 @@ and verifying the behaviour via untyped calls (test code fragments using the `sl
 ***context:*** *TODO*\
 ***location:*** *TODO*
 
+### Jets: `lth`, `gth`, and derived code
+
+```
+++  lth
+  ~/  %lth
+  |=  [a=@ b=@]
+  ^-  ?
+  ?&  !=(a b)
+      |-
+      ?|  =(0 a)
+          ?&  !=(0 b)
+              $(a (dec a), b (dec b))
+  ==  ==  ==
+```
+
+Despite `lth` specifying that the gate requires its input to be two atoms, the type system doesn't actually exist at the
+Nock level. According to the Nock standard, the code should only fail when a Nock instruction attempts to use a cell as
+an atom. Therefore, attempting to call the Nock equivalent of the `lth` code with cells as one or both of the inputs
+should only fail at the instruction `$(a (dec a), b (dec b))`; resolving the Nock code for the decrement operation is
+the first point at which point cell input will be treated as an atom.
+
+However, this means that input where one of `a` or `b` is a cell, and the other is `0` should not bail: this is valid
+input for the above code. Similarly, if `a` and `b` are both cells but are identical, this is also valid input.
+Therefore, the jet for `lth` needs to take this into account, and does:
+```
+u3_noun
+u3wa_lth(u3_noun cor)
+{
+  u3_noun a, b;
+
+  if (  (c3n == u3r_mean(cor, u3x_sam_2, &a, u3x_sam_3, &b, 0))
+     || (c3n == u3ud(b) && 0 != a)
+     || (c3n == u3ud(a) && 0 != b) )
+  {
+    return u3m_bail(c3__exit);
+  }
+  else {
+    return u3qa_lth(a, b);
+  }
+}
+```
+
+The above also applies to `gth`. Jets for code that use `lth` or `gth` indirectly also need to keep this in mind.
+Examples include `lte`, `gte`, `min`, and `max`. 
+
+***source:*** *`~master-morzod`, `~fodwyt-ragful`*\
+***context:*** *TODO*\
+***location:*** *TODO*
+
 ### Jets: Matching `?-` (wuthep) behaviour
 
-`?-` defaults to the final case in the switch. This is important, for example, when matching behaviour directly with a
-switch.
+When attempting to match `?-` behaviour in a jet using a `switch` statement, it's necessary to make sure that the jet
+captures the exact behaviour of the rune. `?-` is basically syntactic sugar for a sequence of `?:` runes with conditions
+and matching expressions that ends in a `~|(%mint-lost !!)` expression if none of the conditionals were met.
+
+The simplest way to do so is to include a `default` case which calls `u3m_bail(c3__fail)`.
 
 ***source:*** *`~master-morzod`*\
 ***context:*** *NONE* \
@@ -125,8 +178,20 @@ switch.
 It's perfectly acceptable for a jet to only operate on a subset of a function's domain. Therefore, if it encountered
 input that it was unable to jet, it would punt back to Nock to evaluate the solution using the naive approach.
 
+Note that it is always safe to punt from within a jet. 
+
 ***source:*** *`~wicdev-wisryt`*\
 ***context:*** *TODO*\
+***location:*** *TODO*
+
+### Known issues: Vere memory leak
+
+There is currently one known memory leak that occurs in Vere: when attempting to recover from an exception generated in
+the signal handler while on the home road. In practice, the particular issue that gets reported is `recover top: meme`,
+but that's not important: any exception generated in the signal handler on the home road will trigger the leak.
+
+***source:*** *`~master-morzod`*\
+***context:*** *NONE* \
 ***location:*** *TODO*
 
 ### Profiling: AddressSanitizer

@@ -13,6 +13,7 @@ This section contains information about Hoon/Arvo development.
 [Casting: pull type out of gate output](#casting-pull-type-out-of-gate-output) \
 [Casting: what is "normalization"?](#casting-what-is-normalization) \
 [Error: `fire-core -fork-type.#! expected-fork-to-be-core fire-type`](#error-fire-core--fork-type-expected-fork-to-be-core-fire-type) \
+[Error: `fuse-loop`](#error-fuse-loop) \
 [Error: `mint-vain` or `-need.[i=@ t=it(@)] -have.%~` when using `list`](#error-mint-vain-or--needi-tit--have-when-using-list) \
 [Functions: core vs. door, gate vs. trap](#functions-core-vs-door-gate-vs-trap) \
 [Functions: gates with default values](#functions-gates-with-default-values) \
@@ -172,6 +173,25 @@ This error has been known to appear in the following situations:
 
 ***source:*** *`~finmep-lanteb`*\
 ***context:*** *TODO*\
+***location:*** *TODO*
+
+### Error: `fuse-loop`
+
+Any `_-loop` error in the compiler comes from expanding a `%hold` type, and then subsequently encountering that same
+`%hold` type again (i.e. a recursive definition error in the encountered type).
+
+`fuse` refers to `+fuse:ut`, which is used for type intersection during branch specialization in `?:`, `?=`, and any
+other rune that reduces to those two. If a pattern matches a wing, the type of the pattern is "added" to the type of the
+wing, otherwise it's "subtracted". Therefore, `fuse-loop` means the detection of an infinite loop in the type definition
+during branch specialization.
+
+The above is the exact, technical answer. At a practical level, it's a rather rare compiler error as, generally, type
+recursion issues tend to be caught by `fish-loop` (e.g. attempting to use `?=` with a recursive mold like `list`). A
+`fuse-loop` error implies that there is a recursive type error in the type of the wing of a `?=` / `?:`, as opposed to
+the type of the pattern (i.e. in the `~[1 2 3 4]` of `?=((list @) ~[1 2 3 4])`, as opposed to the `(list @)`).
+
+***source:*** *`~master-morzod`*\
+***context:*** https://developers.urbit.org/guides/core/hoon-school/I-testing#fish-loop \
 ***location:*** *TODO*
 
 ### Error: `mint-vain` or `-need.[i=@ t=it(@)] -have.%~` when using `list`
