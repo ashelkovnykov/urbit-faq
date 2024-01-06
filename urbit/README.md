@@ -6,16 +6,11 @@ This section contains miscellaneous tidbits about Urbit.
 
 [Can I build a foreign desk using Clay?](#can-i-build-a-foreign-desk-using-clay) \
 [Debug dashboard](#debug-dashboard)\
-[Fake-ship networking](#fake-ship-networking) \
 [How do I update to a specific OTA?](#how-do-i-update-to-a-specific-ota) \
 [I messaged my ship from a comet and saw a breach notification. What happened?](#i-messaged-my-ship-from-a-comet-and-saw-a-breach-notification-what-happened) \
 [Is a sequence of moves in an event guaranteed to terminate?](#is-a-sequence-of-moves-in-an-event-guaranteed-to-terminate) \
-[What are brass, solid, and ivory pills?](#what-are-brass-solid-and-ivory-pills) \
-[What are "life" and "rift"?](#what-are-life-and-rift) \
 [What are the Hoon naming conventions?](#what-are-the-hoon-naming-conventions) \
 [What is an event?](#what-is-an-event) \
-[What is `herb`?](#what-is-herb) \
-[What is `lens`?](#what-is-lens) \
 [What is "remote scry"?](#what-is-remote-scry)
 
 ### Can I build a foreign desk using Clay?
@@ -39,24 +34,6 @@ Every ship has a debugging dashboard available at `http://localhost:8080/~debug/
 ***source:*** *`~nospur-sontud`, `~wicdev-wisryt`*\
 ***context:*** *NONE*\
 ***location:*** *TODO*
-
-### Fake-ship networking
-
-Fake ships run on their own network using fake keys and do not communicate with live-net ships in any way. Multiple
-fake ships running on the same machine can network with each other. However, these fake ships still have 'realistic'
-packet routing: fake galaxies can talk to each other, but fake stars/planets cannot - unless they have the appropriate
-fake sponsors running, too.
-
-```
-~tex & ~mex:            GOOD
-~tex & ~bintex:         GOOD
-~mex & ~bintex:         BAD
-~tex, ~mex, & ~bintex:  GOOD
-```
-
-***source:*** *`~finmep-lanteb`, `~monted-tallex`*\
-***context:*** *NONE*\
-***location:*** https://developers.urbit.org/guides/core/environment#fake-ship-networking
 
 ### How do I update to a specific OTA?
 
@@ -126,46 +103,6 @@ No. For example, this is what a "resubscribe loop" is. This will eventually resu
 ***context:*** *NONE*\
 ***location:*** *TODO*
 
-### What are brass, solid, and ivory pills?
-
-A pill is a bootstrap sequence used to launch an Urbit ship for the first time. It consists of 3 ordered lists:
-1. A list of events to create the Arvo kernel
-2. A list of Arvo events
-3. A list of userspace events to set up the Clay file system
-
-The brass pill is a full bootstrap pill for production.
-
-The solid pill is a fast-boot for development.
-
-The ivory pill is for runtime support and is not bootable.
-
-***source:*** *`~tinnus-napbus`*\
-***context:*** \
-- https://operators.urbit.org/manual/os/dojo-tools#brass \
-- https://operators.urbit.org/manual/os/dojo-tools#solid \
-***location:*** https://urbit.org/docs/glossary/pill
-
-### What are "life" and "rift"?
-
-"life" is the "key revision" number. Each ship signs its messages with its private key (actually a very large, secret
-number used in a mathematical equation) so that other ships can verify that it truly authored those messages. Getting a
-new key (called "key rotation" or "rotating keys") is like changing the lock on the door to your house; everyone who had
-the old key will need to get the new one.
-
-There are several reasons that a pilot might want to rotate keys:
-1. The pilot has sold the ship, and the new owner wants new keys (just like changing locks after moving into a new house)
-2. The pilot believes his keys have been compromised (just like changing the locks after your keys are stolen)
-3. As a regular routine, to establish [limited perfect forward secrecy](https://en.wikipedia.org/wiki/Forward_secrecy)
-
-"rift" is the "continuity number", i.e. the number of factory resets that  ship has performed. A ship that has never
-performed a factory reset has a rift of 0.
-
-Both life and rift are monotonically increasing whole numbers.
-
-***source:*** *`~finmep-lanteb`*\
-***context:*** https://operators.urbit.org/manual/os/dojo-tools#keys \
-***location:*** *TODO*
-
 ### What are the Hoon naming conventions?
 
 In early Hoon, there were three naming conventions:
@@ -224,40 +161,6 @@ off a Clay recompilation. Thus, an event is the entire set of moves set in motio
 ***context:*** *NONE* \
 ***location:*** *TODO*
 
-### What is `herb`?
-
-`herb` is a Python CLI tool for sending commands to a local ship over HTTP. It supports most of the dojo syntax. `herb`
-is closely coupled with `%lens`; in fact, `herb` is just a thin client for formatting HTTP requests to `%lens`.
-
-Together, `herb` and `%lens` have a number of shortcomings:
-- Though their functionality is tightly coupled with the dojo, much of the syntactic sugar of the dojo doesn't work
-over HTTP
-- The output from commands sent via `herb` is not available externally to the ship: all you can see outside the ship is
-whether the HTTP request was received or not
-- A bad request can cause the `%lens` agent to hang until it is manually cancelled, either from inside the ship or
-through a `%cancel` request to `herb`
-- If an `herb` HTTP request is rejected by a ship, it's unknowable from outside the ship if this is because `%lens` is
-busy or because `%lens` is stuck
-- Requires going through Eyre, using HTTP and JSON
-
-For all of these reasons, `herb`/`%lens` are in the process of being replaced by the `conn.c` I/O driver in the runtime
-and the Khan thread-management vane.
-
-***source:*** *`~finmep-lanteb`, `~master-morzod`*\
-***context:*** *NONE* \
-***location:*** *TODO*
-
-### What is `%lens`?
-
-`%lens` is an agent which runs on your ship and allows you to send dojo commands to a local ship over HTTP. By default,
-it listens on port `12321`.
-
-See the [What is `herb`?](#what-is-herb) section below for more info.
-
-***source:*** *`~finmep-lanteb`, `~hastuc-dibtux`*\
-***context:*** *NONE*\
-***location:*** *TODO*
-
 ### What is "remote scry"?
 
 "Remote scry" is an alternative networking protocol to Ames that is implemented in the Fine (fee-nay) vane. It allows
@@ -270,5 +173,13 @@ Since read requests do not affect state, they can be spawned in parallel threads
 in the runtime, short-circuiting even the requirements that the request be handled by Fine in Nock.
 
 ***source:*** *`~wicdev-wisryt`*\
+***context:*** *NONE*\
+***location:*** *TODO*
+
+### What is `tiny.hoon'?
+
+`tiny.hoon` is the standard library used by the ship implementing the naive rollup smart contract code.
+
+***source:*** *`~ritpub-sipsyl`*\
 ***context:*** *NONE*\
 ***location:*** *TODO*

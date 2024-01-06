@@ -76,15 +76,16 @@ Ex: `:~bacdun/faucet &faucet-action [%open 0x0 0xdead.beef]`
 ### Command: what do the different command symbols mean?
 
 ```
-+foo 'some' 'args'        ::  run %/gen/foo.hoon with args
-|foo 'some' 'args'        ::  poke %hood with output of %/gen/hood/foo.hoon with args
-:foo|bar 'some' 'args'    ::  poke %foo with output of %/gen/bar.hoon with args
-:foo ['some' 'args']      ::  poke %foo with args as a %noun mark
-:foo &bar ['some' 'args'] ::  poke %foo with args as a %bar mark
-:~zod/foo ['some' 'args'] ::  poke %foo on ~zod with args as a %noun mark
--foo 'some' 'args'        ::  run thread %foo with args
--foo!bar 'some' 'args'    ::  run thread %bar in desk %foo with args
-&foo 'arg'                ::  cast arg to mark foo (in %/mar/foo.hoon) from noun
++foo 'some' 'args'         :: run %/gen/foo.hoon with args
++foo!bar 'some' 'args'     :: run /=foo=/gen/bar.hoon with args
+|foo 'some' 'args'         :: poke %hood with output of %/gen/hood/foo.hoon with args
+:foo|bar 'some' 'args'     :: poke %foo with output of %/gen/bar.hoon with args
+:foo ['some' 'args']       :: poke %foo with args as a %noun mark
+:foo &bar ['some' 'args']  :: poke %foo with args as a %bar mark
+:~zod/foo ['some' 'args']  :: poke %foo on ~zod with args as a %noun mark
+-foo 'some' 'args'         :: run thread %foo with args
+-foo!bar 'some' 'args'     :: run thread %bar in desk %foo with args
+&foo 'arg'                 :: cast arg to mark foo (in %/mar/foo.hoon) from noun
 ```
 
 ***source:*** *`~tinnus-napbus`, `~watter-parter`, `~wicdev-wisryt`*\

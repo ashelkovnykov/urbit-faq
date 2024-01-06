@@ -7,6 +7,7 @@ This section contains information about Hoon/Arvo development.
 [Auras: how does Urbit time work?](#auras-how-does-urbit-time-work) \
 [Best Practice: iterating over `cord`](#best-practice-iterating-over-cord) \
 [Best Practice: disable `%spot` hints](#best-practice-disable-spot-hints) \
+[Best Practice: helper cores in Gall agents](#best-practice-helper-cores-in-gall-agents) \
 [Best Practice: when to use lead cores?](#best-practice-when-to-use-lead-cores) \
 [Build: do I need to compile a new pill for changes to Urbit source code?](#build-do-i-need-to-compile-a-new-pill-for-changes-to-urbit-source-code) \
 [Build: how do I test that `lib`/`sur` files are correct?](#build-how-do-i-test-that-libsur-files-are-correct) \
@@ -27,7 +28,8 @@ This section contains information about Hoon/Arvo development.
 [Scry: can I virutalize scries?](#scry-can-i-virtualize-scries) \
 [Scry: what if the agent I'm scrying isn't running?](#scry-what-if-the-agent-im-scrying-isnt-running) \
 [Scry: why does `.^` return `(unit (unit))`?](#scry-why-does--return-unit-unit) \
-[Types: recursive types]() \
+[Testing: disable authentication for HTTP]() \
+[Types: recursive types](#types-recursive-types) \
 [Vanes: Behn inserts src.bowl into timer path](#vanes-behn-inserts-srcbowl-into-timer-path)
 
 ### Auras: how does Urbit time work?
@@ -57,6 +59,28 @@ squeeze more performance out of code after it's confirmed to compile by disablin
 to the beginning.
 
 ***source:*** *`~master-morzod`*\
+***context:*** *NONE* \
+***location:*** *TODO*
+
+### Best Practice: helper cores in Gall agents
+
+If you have a helper core with a sample (a door) in your Gall agent, wrap it in another core and put the door under a
+named arm. Then, make an alias to point at that arm. This will prevent weird bugs whose root cause is accidentally
+invoking arms from the helper core without using the alias, and hence forgetting to set the sample of the core
+correctly.
+
+Ex:
+```
+++  helper-core  ~(. ^helper-core bowl)
+...
+|%
+++  helper-core
+  |_  =bowl:gall
+  ...
+==
+```
+
+***source:*** *`~midlev-mindyr`*\
 ***context:*** *NONE* \
 ***location:*** *TODO*
 
@@ -281,7 +305,7 @@ iteration could potentially have a different type (producing heterogeneous `list
 
 ***source:*** *`~master-morzod`* \
 ***context:*** *NONE*\
-***location:*** *TODO*
+***location:*** https://docs.urbit.org/courses/hoon-school/R-metals
 
 ### Operators: what does the `,` operator do?
 
@@ -292,7 +316,8 @@ When used as a wing, `,` strips faces from legs:
 [b=1 c=2]
 ```
 
-However, on its own `,` is irregular syntax for `^:`:
+However, on its own `,` is irregular syntax for `^:`. This will switch the compiler into "structure" mode, thereby
+producing a mold:
 ```
 > ,@
 <1.mek [* [our=@p now=@da eny=@uvJ] <17.fkq 33.ehb 14.dyd 53.vlb 77.lrt 232.oiq 51.qbt 123.zao 46.hgz 1.pnw %140>]>
@@ -300,8 +325,8 @@ However, on its own `,` is irregular syntax for `^:`:
 0
 ```
 
-***source:*** *`~finmep-lanteb`*\
-***context:*** *NONE* \
+***source:*** *`~finmep-lanteb`, `~sidnym-ladrut`, `~tinnus-napbus`*\
+***context:*** https://developers.urbit.org/guides/core/hoon-school/L-struct#structure-mode \
 ***location:*** https://developers.urbit.org/reference/hoon/limbs/wing
 
 ### Parsing: `cord` vs. `tape`
@@ -325,14 +350,9 @@ list (the ideal case for a `tape`) is pretty quick. However, operations on a `co
 
 `~+` caches the product of a `[formula subject]` pair until the end of the current "road" (see context).
 
-Each Arvo event runs on the kernel's "outer" road. However, the kernel may launch "inner" roads for processes such as
-userspace agents. Calling the scry rune (`.^`) will also start an "inner" road using the kernel's scry-handler. Thus,
-the following stack of roads is common:
-```
-kernel road -> agent road -> scry road
-```
-Each road has its own cache, which is cleared when the road is removed at the conclusion of its task (the above example
-would have three caches which would be cleared in reverse order).
+Each Arvo event runs on the kernel's "outer" road. However, the kernel may launch "inner" roads for virtualizing
+processes such as userspace agents. Each road has its own cache, which is cleared when the road is removed at the
+conclusion of its task.
 
 ***source:*** *`~master-morzod`, `~ritpub-sipsyl`, `~tinnus-napbus`*\
 ***context:*** https://github.com/urbit/urbit/blob/master/doc/spec/u3.md#u3-the-road-model \
@@ -389,6 +409,16 @@ running using the `u` `care` of a Gall scry:
 - `[~ ~ *]`: "This scry path exists and returned the given data."
 
 ***source:*** *`~tinnus-napbus`*\
+***context:*** *TODO*\
+***location:*** *TODO*
+
+### Testing: disable authentication for HTTP
+
+To disable `+code` authentication when accessing fake ships through the browser, set `authenticated` to always be true
+in
+[Eyre](https://github.com/urbit/urbit/blob/1b0a7770685afea8abd2f93fea4982e4f8071f0a/pkg/arvo/sys/vane/eyre.hoon#L826).
+
+***source:*** *`~dinleb-rambep`*\
 ***context:*** *TODO*\
 ***location:*** *TODO*
 
