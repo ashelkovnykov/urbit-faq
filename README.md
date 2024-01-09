@@ -2,7 +2,7 @@
 
 This repo contains non-trivial info that I have asked or have seen others ask, as well as the answers we received. At
 one time it contained more information, but much of it has been documented in
-[the main Urbit docs](https://developers.urbit.org). The ultimate goal is to have all of this information in the main
+[the main Urbit docs](https://docs.urbit.org). The ultimate goal is to have all of this information in the main
 docs/guides, one day. Until then, the goals of this repo are:
 
 1. Help new Hoon devs and Urbit pilots
