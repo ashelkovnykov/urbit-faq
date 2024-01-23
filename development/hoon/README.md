@@ -28,7 +28,7 @@ This section contains information about Hoon/Arvo development.
 [Scry: can I virutalize scries?](#scry-can-i-virtualize-scries) \
 [Scry: what if the agent I'm scrying isn't running?](#scry-what-if-the-agent-im-scrying-isnt-running) \
 [Scry: why does `.^` return `(unit (unit))`?](#scry-why-does--return-unit-unit) \
-[Testing: disable authentication for HTTP]() \
+[Testing: disable authentication for HTTP](#testing-disable-authentication-for-http) \
 [Types: recursive types](#types-recursive-types) \
 [Vanes: Behn inserts src.bowl into timer path](#vanes-behn-inserts-srcbowl-into-timer-path)
 
