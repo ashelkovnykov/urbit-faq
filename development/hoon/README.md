@@ -11,16 +11,20 @@ This section contains information about Hoon/Arvo development.
 [Best Practice: when to use lead cores?](#best-practice-when-to-use-lead-cores) \
 [Build: do I need to compile a new pill for changes to Urbit source code?](#build-do-i-need-to-compile-a-new-pill-for-changes-to-urbit-source-code) \
 [Build: how do I test that `lib`/`sur` files are correct?](#build-how-do-i-test-that-libsur-files-are-correct) \
+[Casting: auras from text](#casting-auras-from-text) \
 [Casting: pull type out of gate output](#casting-pull-type-out-of-gate-output) \
 [Casting: what is "normalization"?](#casting-what-is-normalization) \
+[Error: `bail:meme` vs. `recover: dig: meme`](#error-bailmeme-vs-recover-dig-meme) \
 [Error: `fire-core -fork-type.#! expected-fork-to-be-core fire-type`](#error-fire-core--fork-type-expected-fork-to-be-core-fire-type) \
 [Error: `fuse-loop`](#error-fuse-loop) \
 [Error: `mint-vain` or `-need.[i=@ t=it(@)] -have.%~` when using `list`](#error-mint-vain-or--needi-tit--have-when-using-list) \
 [Functions: core vs. door, gate vs. trap](#functions-core-vs-door-gate-vs-trap) \
 [Functions: gates with default values](#functions-gates-with-default-values) \
 [Functions: is it bad to recurse on a wet gate?](#functions-is-it-bad-to-recurse-on-a-wet-gate) \
+[Functions: naming a `|-` gate used as a loop](#functions-naming-a---gate-used-as-a-loop) \
 [Operators: what does the `,` operator do?](#operators-what-does-the--operator-do) \
 [Parsing: `cord` vs. `tape`](#parsing-cord-vs-tape) \
+[Runes: centis (`%=`) vs. cencab (`%_`)](#runes-centis--vs-cencab-_) \
 [Runes: how does bucket (`$^`) work?](#runes-how-does-bucket--work) \
 [Runes: how does siglus (`~+`) work?](#runes-how-does-siglus--work) \
 [Runes: how does sigtis (`~=`) work?](#runes-how-does-sigtis--work) \
@@ -176,6 +180,18 @@ then using the "type spear" (`-:!>(l)`) as follows:
 ***context:*** *TODO*\
 ***location:*** *TODO*
 
+### Casting: auras from text
+
+When attempting to cast an aura from text stored as a `cord` (e.g. casting JSON data), it's necessary to use a
+formatting function such as `+slav` or `+slaw`. Just casting the input with kethep (`^-`) or `+soft` won't work, because
+auras aren't actual types, they're just hints about how atoms should be interpreted (i.e. the actual type is `atom`).
+Therefore, any aura can be trivially converted to any other aura, but the data might not retain the correct meaning
+(e.g. `^-  @ud  '42'` is `12.852`, not `42`).
+
+***source:*** *`~dozreg-toplud`*\
+***context:*** https://docs.urbit.org/language/hoon/reference/stdlib/4m#slaw \
+***location:*** *TODO*
+
 ### Casting: what is "normalization"?
 
 Normalization is a two-step process performed by the compiler when a mold receives a value:
@@ -188,6 +204,16 @@ byte data) or by casting the pointer and using the member names.
 
 ***source:*** *`~timluc-miptev`*\
 ***context:***  *NONE*\
+***location:*** *TODO*
+
+### Error: `bail:meme` vs. `recover: dig: meme`
+
+Both of these errors are the same: OOM. However, `bail:meme` comes from Arvo itself whereas `recover: dig: meme` comes
+from a signal handler. In other words, the latter is detected by the runtime, which stops the computation and notifies
+the kernel which produces the former.
+
+***source:*** *`~master-morzod`*\
+***context:*** *TODO*\
 ***location:*** *TODO*
 
 ### Error: `fire-core -fork-type.#! expected-fork-to-be-core fire-type`
@@ -258,9 +284,10 @@ should provide additional context.
 ```
 
 ***source:*** *`~norsyr-torryn`, `~palfun-foslup`, `~sorreg-namtyv`*\
-***context:*** \
-- https://github.com/urbit/arvo/issues/1024 \
-- https://web.archive.org/web/20140424223310/http://urbit.org/doc/hoon/tut/7/ \
+***context:***
+- https://github.com/urbit/arvo/issues/1024
+- https://web.archive.org/web/20140424223310/http://urbit.org/doc/hoon/tut/7/
+
 ***location:*** *TODO*
 
 ### Functions: core vs. door, gate vs. trap
@@ -277,12 +304,13 @@ code:
 ```
 
 ***source:*** *`~master-morzod`*\
-***context:*** \
-- https://developers.urbit.org/reference/glossary/core \
-- https://developers.urbit.org/reference/glossary/door \
-- https://developers.urbit.org/reference/glossary/gate \
-- https://developers.urbit.org/reference/glossary/trap \
-  ***location:*** https://developers.urbit.org/guides/core/hoon-school/F-cores#repeating-yourself-using-a-trap
+***context:***
+- https://developers.urbit.org/reference/glossary/core
+- https://developers.urbit.org/reference/glossary/door
+- https://developers.urbit.org/reference/glossary/gate
+- https://developers.urbit.org/reference/glossary/trap
+
+***location:*** https://developers.urbit.org/guides/core/hoon-school/F-cores#repeating-yourself-using-a-trap
 
 ### Functions: gates with default values
 
@@ -306,6 +334,23 @@ iteration could potentially have a different type (producing heterogeneous `list
 ***source:*** *`~master-morzod`* \
 ***context:*** *NONE*\
 ***location:*** https://docs.urbit.org/courses/hoon-school/R-metals
+
+### Functions: naming a `|-` gate used as a loop
+
+If you want to assign a name to a gate created by `|-` that's used as a loop (for example, if you have nested loops),
+the best way to do so is to use create an alias with the `=*` rune:
+```
+...
+|-
+=*  outer-loop  $
+...
+|-
+...
+```
+
+***source:*** *`~palfun-foslup`, `~rovnys-ricfer`*\
+***context:*** *NONE*\
+***location:*** *TODO*
 
 ### Operators: what does the `,` operator do?
 
@@ -336,6 +381,30 @@ list (the ideal case for a `tape`) is pretty quick. However, operations on a `co
 
 ***source:*** *`~master-morzod`*\
 ***context:*** https://github.com/urbit/urbit/pull/5456 \
+***location:*** *TODO*
+
+### Runes: centis (`%=`) vs. cencab (`%_`)
+
+When modifying the value of a wing, you often modify the type in subtle ways. For example, consider this example from
+the STL, which recurses over a `list` using barhep (`|-`):
+```
+1 ++  lent              ::  length
+2   ~/  %lent
+3   |=  a=(list)
+4   ^-  @
+5   =+  b=0
+6   |-
+7   ?~  a  b
+8   $(a t.a, b +(b))
+```
+
+Line `8` recurses by calling the irregular form of `%=`. Why not `%_`? After line `7`, we know that `a` is non-null.
+Therefore, the type of `a` is no longer `list`, but actually `lest`. However, for the recursion to function correctly,
+we need the type of `a` to be `list` when we loop back to line `6`. Therefore, we need to slightly alter the type at the
+same time as altering the value.
+
+***source:*** *`~master-morzod`*\
+***context:*** *TODO* \
 ***location:*** *TODO*
 
 ### Runes: how does bucket (`$^`) work?

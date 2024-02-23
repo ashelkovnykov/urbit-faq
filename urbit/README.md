@@ -7,6 +7,7 @@ This section contains miscellaneous tidbits about Urbit.
 [Can I build a foreign desk using Clay?](#can-i-build-a-foreign-desk-using-clay) \
 [Debug dashboard](#debug-dashboard)\
 [How do I update to a specific OTA?](#how-do-i-update-to-a-specific-ota) \
+[How does Vere bootstrap the Hoon compiler?]() \
 [I messaged my ship from a comet and saw a breach notification. What happened?](#i-messaged-my-ship-from-a-comet-and-saw-a-breach-notification-what-happened) \
 [Is a sequence of moves in an event guaranteed to terminate?](#is-a-sequence-of-moves-in-an-event-guaranteed-to-terminate) \
 [What are the Hoon naming conventions?](#what-are-the-hoon-naming-conventions) \
@@ -74,6 +75,20 @@ Let's say we want to OTA specifically to the version of Arvo with `zuse` `%420`:
 
 ***source:*** *`~dovsem-bornyl`*\
 ***context:*** *TODO*\
+***location:*** *TODO*
+
+### How does Vere bootstrap the Hoon compiler
+
+The first Hoon compiler was written in some other language. This compiler was then used to compile `hoon.hoon` to Nock.
+Vere is a Nock interpreter, and therefore is able to use the Nock version of `hoon.hoon` to henceforth further compile
+Hoon.
+
+When attempting to boot a ship, the third event in the solid or brass pill being used injects a precompiled Nock
+`hoon.hoon`. The fourth event is `hoon.hoon` as source, which is compiled by the Nock from the third event into new Nock
+which replaces the old Nock from the third event.
+
+***source:*** *`~dozreg-toplud`*\
+***context:*** https://docs.urbit.org/glossary/pill \
 ***location:*** *TODO*
 
 ### I messaged my ship from a comet and saw a breach notification. What happened?

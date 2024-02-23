@@ -5,12 +5,15 @@ This section contains information about using the Dojo (the Urbit ship terminal)
 ## Contents
 
 [Command: call thread from custom desk](#command-call-thread-from-custom-desk) \
-[Command: check if ship is live or fake]() \
+[Command: check if ship is live or fake](#command-check-if-ship-is-live-or-fake) \
+[Command: crash the pretty printer](#command-crash-the-pretty-printer) \
+[Command: get docket for application](#command-get-docket-for-application) \
 [Command: get latest hash of desk](#commands-get-latest-hash-of-desk) \
 [Command: poke an agent on another ship from dojo](#commands-poke-an-agent-on-another-ship-from-dojo) \
 [Command: print jammed noun to dojo](#commands-print-jammed-noun-to-dojo) \
 [Command: what do the different command symbols mean?](#commands-what-do-the-different-command-symbols-mean) \
 [Error: dojo stuck on `%dy-no-prompt`](#error-dojo-stuck-on-dy-no-prompt) \
+[Error: "leak" messages in dojo after Vere crash](#error-leak-messages-in-dojo-after-vere-crash) \
 [What does `|meld` do?](#what-does-meld-do) \
 [What does `|pack` do?](#what-does-pack-do) \
 [What does the output of `|mass` mean?](#what-does-the-output-of-mass-mean) \
@@ -36,6 +39,29 @@ The following scry will return true (a.k.a. `%.y` a.k.a. `0`) if a ship is fake 
 ```
 
 ***source:*** *`~tinnus-napbus`*\
+***context:*** *TODO*\
+***location:*** *TODO*
+
+### Command: crash the pretty printer
+
+- `!>(sign-arvo)`
+- `|.(1)`
+- Generally, printing any type or trap will work
+
+***source:*** *`~sidnym-ladrut`, `~wispem-wantex`*\
+***context:*** *TODO*\
+***location:*** *TODO*
+
+### Command: get docket for application
+
+For an application local to your own ship:
+```
+=docket -build-file /=landscape=/sur/docket/hoon
+=file -read %q [ship] [desk] [revision] /desk/docket-0
+(docket.docket file)
+```
+
+***source:*** *`~dinleb-rambep`*\
 ***context:*** *TODO*\
 ***location:*** *TODO*
 
@@ -106,6 +132,22 @@ particular thread.
 ***source:*** *`~finmep-lanteb`, `~tinnus-napbus`*\
 ***context:*** *NONE*\
 ***location:*** https://urbit.org/using/os/shell#troubleshooting
+
+### Error: "leak" messages in dojo after Vere crash
+
+This error usually appears as a list of messages like these:
+```
+2024-02-06T21:39:12.119737301Z leak: 0x2c1caa190 mug=0 swept=1
+2024-02-06T21:39:12.119737301Z    size: B/24
+2024-02-06T21:39:12.119737301Z    data: [%spot [%sys %vane %ames %hoon 0] [3422 13] 3422 39]
+```
+
+These errors are caused by a `bail:meme` (OOM error) while copying results from a Nock computation to the home road.
+Running `pack` and `meld` commands then restarting should resolve the error on next boot.
+
+***source:*** *`~master-morzod`*\
+***context:*** *NONE*\
+***location:*** *TODO*
 
 ### What does `|meld` do?
 
