@@ -11,6 +11,7 @@ This section contains information about runtime (Vere) development.
 [Hints: Is it desirable to have hint hooks that can be called before the dynamic hint formula is computed?](#hints-is-it-desirable-to-have-hint-hooks-that-can-be-called-before-the-dynamic-hint-formula-is-computed) \
 [Hints: What should be done with malformed or unrecognized hints?](#hints-what-should-be-done-with-malformed-or-unrecognized-hints) \
 [How does Vere track that a ship is "fake"?](#how-does-vere-track-that-a-ship-is-fake) \
+[Jets: allocating in a jet](#jets-allocating-in-a-jet) \
 [Jets: `bail` error code usage](#jets-bail-error-code-usage) \
 [Jets: `lth`, `gth`, and derived code](#jets-lth-gth-and-derived-code) \ 
 [Jets: Matching `?-` (wuthep) behaviour](#jets-matching---wuthep-behaviour) \
@@ -97,6 +98,16 @@ A fake bit is persisted in the LMDB "META" database. This can be checked by the 
 e.g. `c3y == pir_u->fak_o`.
 
 ***source:*** *`~master-morzod`*\
+***context:*** *TODO*\
+***location:*** *TODO*
+
+### Jets: allocating in a jet
+
+Allocation outside of the loom is prohibited while in a jet. Only the on-loom allocation functions `u3a_malloc`,
+`u3a_realloc`, and `u3a_free` are okay. Vendored libraries that are used for jets either have functions that allocate
+removed, or have their allocators replaced.
+
+***source:*** *`~dinleb-rambep`, `~master-morzod`*\
 ***context:*** *TODO*\
 ***location:*** *TODO*
 
