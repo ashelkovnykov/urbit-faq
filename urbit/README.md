@@ -12,7 +12,9 @@ This section contains miscellaneous tidbits about Urbit.
 [Is a sequence of moves in an event guaranteed to terminate?](#is-a-sequence-of-moves-in-an-event-guaranteed-to-terminate) \
 [What are the Hoon naming conventions?](#what-are-the-hoon-naming-conventions) \
 [What is an event?](#what-is-an-event) \
-[What is "remote scry"?](#what-is-remote-scry)
+[What is "remote scry"?](#what-is-remote-scry) \
+[What is the boot sequence of a pill?](#what-is-the-boot-sequence-of-a-pill) \
+[What is `tiny.hoon'?](#what-is-tinyhoon)
 
 ### Can I build a foreign desk using Clay?
 
@@ -188,6 +190,29 @@ Since read requests do not affect state, they can be spawned in parallel threads
 in the runtime, short-circuiting even the requirements that the request be handled by Fine in Nock.
 
 ***source:*** *`~wicdev-wisryt`*\
+***context:*** *NONE*\
+***location:*** *TODO*
+
+### What is the boot sequence of a pill?
+
+A pill is three lists of ordered "events" (events isn't exactly correct, since they aren't all Arvo events). The first
+list contains boot-level events, the second list contains kernel events, and the third list contains userspace events 
+(i.e. the pre-installed desks [e.g. `%base`, `%landscape`, etc.] and a Clay blob store). The events are structured in
+this way, so that developers have the option to side-load other events in-between the levels.
+
+During boot:
+- The first "event" is a lifecycle loop that defines how the following events should be injected.
+- The second "event" is a Nock formula to bootstrap a basic form of Arvo
+- The third "event":
+  - For a "solid" pill, this is a precompiled Nock formula containing `hoon.hoon`, `arvo.hoon`, and the vanes which
+    replaces the existing Arvo
+  - For a "brass" pill, this is a precompiled Nock formula containing `hoon.hoon`
+- The fourth "event":
+  - For a "solid" pill, there is no fourth event
+  - For a "brass" pill, the `hoon.hoon` from the previous event is used to compile `arvo.hoon`, `lull.hoon`,
+    `zuse.hoon`, and the vanes. The compiled Nock formulas replace the existing Arvo.
+
+***source:*** *`~finmep-lanteb`*\
 ***context:*** *NONE*\
 ***location:*** *TODO*
 

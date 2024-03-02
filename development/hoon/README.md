@@ -1,7 +1,7 @@
 # Hoon
 
 This section contains information about Hoon/Arvo development.
-
+``
 ## Contents
 
 [Auras: how does Urbit time work?](#auras-how-does-urbit-time-work) \
@@ -18,18 +18,22 @@ This section contains information about Hoon/Arvo development.
 [Error: `fire-core -fork-type.#! expected-fork-to-be-core fire-type`](#error-fire-core--fork-type-expected-fork-to-be-core-fire-type) \
 [Error: `fuse-loop`](#error-fuse-loop) \
 [Error: `mint-vain` or `-need.[i=@ t=it(@)] -have.%~` when using `list`](#error-mint-vain-or--needi-tit--have-when-using-list) \
-[Functions: core vs. door, gate vs. trap](#functions-core-vs-door-gate-vs-trap) \
-[Functions: gates with default values](#functions-gates-with-default-values) \
-[Functions: is it bad to recurse on a wet gate?](#functions-is-it-bad-to-recurse-on-a-wet-gate) \
-[Functions: naming a `|-` gate used as a loop](#functions-naming-a---gate-used-as-a-loop) \
+[Functions: when should `homo` be used?](#functions-when-should-homo-be-used) \
+[Gates: core vs. door, gate vs. trap](#gates-core-vs-door-gate-vs-trap) \
+[Gates: gates with default values](#gates-gates-with-default-values) \
+[Gates: is it bad to recurse on a wet gate?](#gates-is-it-bad-to-recurse-on-a-wet-gate) \
+[Gates: naming a `|-` gate used as a loop](#gates-naming-a---gate-used-as-a-loop) \
+[Jets: what are jet labels?](#jets-what-are-jet-labels) \
 [Operators: what does the `,` operator do?](#operators-what-does-the--operator-do) \
 [Parsing: `cord` vs. `tape`](#parsing-cord-vs-tape) \
+[Rendering: difference between `%palm` and `%rose` in `$tank`](#rendering-difference-between-palm-and-rose-in-tank) \
 [Runes: centis (`%=`) vs. cencab (`%_`)](#runes-centis--vs-cencab-_) \
 [Runes: how does bucket (`$^`) work?](#runes-how-does-bucket--work) \
 [Runes: how does siglus (`~+`) work?](#runes-how-does-siglus--work) \
 [Runes: how does sigtis (`~=`) work?](#runes-how-does-sigtis--work) \
 [Runes: how does tissig (`=~`) work?](#runes-how-does-tissig--work) \
 [Scry: can I virutalize scries?](#scry-can-i-virtualize-scries) \
+[Scry: pass-through scry handler](#scry-pass-through-scry-handler) \
 [Scry: what if the agent I'm scrying isn't running?](#scry-what-if-the-agent-im-scrying-isnt-running) \
 [Scry: why does `.^` return `(unit (unit))`?](#scry-why-does--return-unit-unit) \
 [Testing: disable authentication for HTTP](#testing-disable-authentication-for-http) \
@@ -290,7 +294,25 @@ should provide additional context.
 
 ***location:*** *TODO*
 
-### Functions: core vs. door, gate vs. trap
+### Functions: when should `homo` be used?
+
+`+homo` is occasionally necessary to unify the types of disparate inputs when working simultaneously with `$list`s and
+wet gates, typically when dealing with "casually constructed" `$list`s (e.g. `(limo %a %b %c)`):
+```
+> =l (limo [%abc %def 123 ~])
+> ? l
+  ^#3.?([i=%abc t=#3] ^#2.?([i=%def t=#2] it(@ud)))
+[i=%abc t=[i=%def t=~[123]]]
+> ? (homo l)
+  it(?(%abc %def @ud))
+~[%abc %def 123]
+```
+
+***source:*** *`~master-morzod`* \
+***context:*** https://docs.urbit.org/courses/hoon-school/R-metals#wet-gates \
+***location:*** https://docs.urbit.org/language/hoon/reference/stdlib/2b#homo
+
+### Gates: core vs. door, gate vs. trap
 
 Just as a door is just a core with a sample, a gate is just a trap with a sample. This can be confirmed by the following
 code:
@@ -312,7 +334,7 @@ code:
 
 ***location:*** https://developers.urbit.org/guides/core/hoon-school/F-cores#repeating-yourself-using-a-trap
 
-### Functions: gates with default values
+### Gates: gates with default values
 
 The `|:` rune produces gates which have default values for the sample. If the sample has multiple values, but you only
 want to override one (or just not all) of them, you need to call the gate using the `%*` rune:
@@ -326,7 +348,7 @@ want to override one (or just not all) of them, you need to call the gate using 
 ***context:*** https://developers.urbit.org/reference/hoon/rune/cen#-centar \
 ***location:*** *TODO*
 
-### Functions: is it bad to recurse on a wet gate?
+### Gates: is it bad to recurse on a wet gate?
 
 Wet gate recursion is almost never desirable: the `+mull` check is re-performed at each call site, meaning that each
 iteration could potentially have a different type (producing heterogeneous `list`s, for example).
@@ -335,7 +357,7 @@ iteration could potentially have a different type (producing heterogeneous `list
 ***context:*** *NONE*\
 ***location:*** https://docs.urbit.org/courses/hoon-school/R-metals
 
-### Functions: naming a `|-` gate used as a loop
+### Gates: naming a `|-` gate used as a loop
 
 If you want to assign a name to a gate created by `|-` that's used as a loop (for example, if you have nested loops),
 the best way to do so is to use create an alias with the `=*` rune:
@@ -350,6 +372,17 @@ the best way to do so is to use create an alias with the `=*` rune:
 
 ***source:*** *`~palfun-foslup`, `~rovnys-ricfer`*\
 ***context:*** *NONE*\
+***location:*** *TODO*
+
+### Jets: what are jet labels?
+
+Jet labels are the list passed as argument `r` to sigcen (`~%`) (typically `~`). They are hooks to Hoon code that the
+jet may use as a part of its implementation. An example for why one may wish to use these hooks is that the jet may have
+only a partial implementation, so it wants to call the raw Hoon code for a subset of its domain. Another example is that
+the jet may only perform pre / post processing on input that is computed by raw Hoon.
+
+***source:*** *`finmep-lanteb`*\
+***context:*** https://docs.urbit.org/language/hoon/reference/rune/sig#-sigcen \
 ***location:*** *TODO*
 
 ### Operators: what does the `,` operator do?
@@ -381,6 +414,28 @@ list (the ideal case for a `tape`) is pretty quick. However, operations on a `co
 
 ***source:*** *`~master-morzod`*\
 ***context:*** https://github.com/urbit/urbit/pull/5456 \
+***location:*** *TODO*
+
+### Rendering: difference between `%palm` and `%rose` in `$tank`
+
+In short, `$tank` is massively over-engineered and heavily biased to rendering Hoon. `%palm`s are rendered in
+"queenside" format (with backstpes after a new line), whereas `%rose`s are rendered in "kingside" format. This is best
+illustrated with these examples:
+```
+((slog (crip (of-wall:format (~(win re `tank`[%palm ["," "[" "!" "]"] ~['abc' 'def' 'ghi']]) 0 10))) ~) ~)
+[   abc
+  def
+ghi
+
+> ((slog (crip (of-wall:format (~(win re `tank`[%rose ["," "[" "]"] ~['abc' 'def' 'ghi']]) 0 10))) ~) ~)
+[ abc
+  def
+  ghi
+]
+```
+
+***source:*** *`~master-morzod`, `~sidnym-ladrut`*\
+***context:*** *TODO*\
 ***location:*** *TODO*
 
 ### Runes: centis (`%=`) vs. cencab (`%_`)
@@ -453,6 +508,27 @@ be found in Ames.
 
 There is no way to virtualize scries directly. Doing so requires the help of a vane, as giving userspace the option to
 virtualize scries directly would expose kernel state and violate referential transparency.
+
+***source:*** *`~master-morzod`*\
+***context:*** *TODO*\
+***location:*** *TODO*
+
+### Scry: pass-through scry handler
+
+Each level of virtualization in Hoon requires an explicit "scry handler": a gate that exists outside the scope of the
+virtualization that can handle the virtualized scry operations. However, typically the virtualization call does not
+require unique scry handling logic and would prefer to use the parent scry handler. Thus was born the "pass-through scry
+handler": a scry handler that just forwards scries to the scry handler being used at *its* level of virtualization:
+```
+|=(a=^ .*(a [%12 [%0 2] %0 3]))
+```
+
+In some cases, this scry handler needs to be passed as compiled Nock. The compiled Nock and the formula to compile it
+are below:
+```
+> .*  0  !=  =>  ~  |=(a=^ ``.*(a [%12 [%0 2] %0 3]))
+[[[1 0] [1 0] 2 [0 6] 1 12 [0 2] 0 3] [0 0] 0]
+```
 
 ***source:*** *`~master-morzod`*\
 ***context:*** *TODO*\
