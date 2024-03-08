@@ -11,6 +11,7 @@ This section contains information about using the Dojo (the Urbit ship terminal)
 [Command: get latest hash of desk](#commands-get-latest-hash-of-desk) \
 [Command: poke an agent on another ship from dojo](#commands-poke-an-agent-on-another-ship-from-dojo) \
 [Command: print jammed noun to dojo](#commands-print-jammed-noun-to-dojo) \
+[Command: replace a broken vane on a ship]() \
 [Command: what do the different command symbols mean?](#commands-what-do-the-different-command-symbols-mean) \
 [Error: dojo stuck on `%dy-no-prompt`](#error-dojo-stuck-on-dy-no-prompt) \
 [Error: "leak" messages in dojo after Vere crash](#error-leak-messages-in-dojo-after-vere-crash) \
@@ -96,6 +97,44 @@ Ex: `:~bacdun/faucet &faucet-action [%open 0x0 0xdead.beef]`
     1. Might need to skip over the first 5 bytes if it's a newt-encoded jammed noun: `(cue (rsh [3 5] j))`
 
 ***source:*** *`~wicdev-wisryt`*\
+***context:*** *NONE*\
+***location:*** *TODO*
+
+### Command: replace a broken vane on a ship
+
+0. Shutdown ship (assuming it's bootable and running)
+1. Generate replacement vane code
+2. Boot a fake ship
+3. Create a new desk in the fake ship
+``` 
+|new-desk %sandbox
+```
+4. Mount the new desk to the external file system
+```
+|mount %sandbox
+```
+5. Copy new vane code to the sandbox desk
+```
+cp /path/to/new-vane.hoon /path/to/fake/ship/sandbox/
+```
+6. Commit the changes to the fake ship
+```
+|commit %sandbox
+```
+7. Create a jam file of the ovum used to replace the existing vane with the new code
+```
+.new-vane/jam [[%$ %arvo ~] %what [[%sys %vane %whatever ~] [%hoon .^(cord %cx /=sandbox=/new-vane/hoon)]] ~]
+```
+8. Inject the ovum into the ship event log
+```
+/path/to/broken/ship/.run -I /path/to/fake/ship/.urb/put/new-vane.jam
+```
+OR
+```
+/path/to/urbit/binary -I /path/to/fake/ship/.urb/put/new-vane.jam /path/to/broken/ship
+```
+
+***source:*** *`~finmep-lanteb`, `~master-morzod`*\
 ***context:*** *NONE*\
 ***location:*** *TODO*
 
