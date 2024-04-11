@@ -11,11 +11,13 @@ This section contains miscellaneous tidbits about Urbit.
 [How does Vere bootstrap the Hoon compiler?](#how-does-vere-bootstrap-the-hoon-compiler) \
 [I messaged my ship from a comet and saw a breach notification. What happened?](#i-messaged-my-ship-from-a-comet-and-saw-a-breach-notification-what-happened) \
 [Is a sequence of moves in an event guaranteed to terminate?](#is-a-sequence-of-moves-in-an-event-guaranteed-to-terminate) \
+[Uninstalling vanes](#uninstalling-vanes) \
 [What are the Hoon naming conventions?](#what-are-the-hoon-naming-conventions) \
 [What is an event?](#what-is-an-event) \
 [What is "remote scry"?](#what-is-remote-scry) \
 [What is the boot sequence of a pill?](#what-is-the-boot-sequence-of-a-pill) \
-[What is `tiny.hoon'?](#what-is-tinyhoon)
+[What is the relationship between Arvo, vanes, and agents?](#what-is-the-relationship-between-arvo-vanes-and-agents) \
+[What is `tiny.hoon`?](#what-is-tinyhoon)
 
 ### Can I build a foreign desk using Clay?
 
@@ -125,8 +127,21 @@ concerned: it's just your comet catching up to the present state of the network.
 No. For example, this is what a "resubscribe loop" is. This will eventually result in a crash due to stack overflow
 (usually a graceful crash: `bail %meme`).
 
-***source:*** *`~wicdev-wisryt`*\
-***context:*** *NONE*\
+***source:*** *`~wicdev-wisryt`* \
+***context:*** *NONE* \
+***location:*** *TODO*
+
+### Uninstalling vanes
+
+Uninstalling a vane requires that any promises made by that vane regarding the namespace continue to be honored. Since a
+scry-handler is only a partial function, this means that in practice, the old state of the vane will still need to be
+maintained within the loom / snapshot. The simplest way to accomplish this is something along the lines of renaming the
+vane in any ships old enough to have had it to something like `%zzzz`, and adding some logic to the replacement vane
+along the lines of, "There used to be another vane here, but it's gone now. If you *really* need its old state for some
+reason, check at `%zzzz`."
+
+***source:*** *`~master-morzod`* \
+***context:*** *NONE* \
 ***location:*** *TODO*
 
 ### What are the Hoon naming conventions?
@@ -225,7 +240,26 @@ During boot:
 ***context:*** *NONE*\
 ***location:*** *TODO*
 
-### What is `tiny.hoon'?
+### What is the relationship between Arvo, vanes, and agents?
+
+Arvo is just a stateful function as an OS: it's very simple and its capabilities are limited. Anything of value that you
+can do with Arvo, you must do through pluggable modules. This is what the vanes are. Vanes, however, are privileged, in
+the sense that they have the ability to create entries within the referentially transparent namespace. Therefore,
+another class of modules is necessary for arbitrary, pluggable, non-privileged behaviour. Thus:
+
+- Arvo: self-updating and privileged
+- Vanes: not self-updating but privileged
+- Agents: neither self-updating nor privileged
+
+For all intents and purposes, vanes *are* the kernel: a change to a vane is effectively a change to the kernel. Although
+they can technically be moved, installed, and uninstalled, it makes the most logical sense to ship Arvo and the vanes
+together.
+
+***source:*** *`~master-morzod`*\
+***context:*** *NONE*\
+***location:*** *TODO*
+
+### What is `tiny.hoon`?
 
 `tiny.hoon` is the standard library used by the ship implementing the naive rollup smart contract code.
 
