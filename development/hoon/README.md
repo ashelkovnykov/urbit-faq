@@ -37,6 +37,7 @@ This section contains information about Hoon/Arvo development.
 [Scry: what if the agent I'm scrying isn't running?](#scry-what-if-the-agent-im-scrying-isnt-running) \
 [Scry: why does `.^` return `(unit (unit))`?](#scry-why-does--return-unit-unit) \
 [Testing: disable authentication for HTTP](#testing-disable-authentication-for-http) \
+[Types: inference via pattern matching](#types-inference-via-pattern-matching) \
 [Types: recursive types](#types-recursive-types) \
 [Vanes: Behn inserts src.bowl into timer path](#vanes-behn-inserts-srcbowl-into-timer-path)
 
@@ -567,6 +568,24 @@ in
 ***context:*** *TODO*\
 ***location:*** *TODO*
 
+### Types: inference via pattern matching
+
+The Hoon compiler is only able to make type inferences through positive pattern matches. Consider the following code
+example:
+
+```
+> =x `(unit @)`[~ 5]
+> ?:  ?=(^ x)  u.x  0
+5
+> ?:  !?=(@ x)  u.x  0
+-find.u.x
+find-fork
+```
+
+***source:*** *`~dozreg-toplud`* \
+***context:*** *TODO* \
+***location:*** *TODO*
+
 ### Types: recursive types
 
 Recursive types almost always need to have a bunt specified using the `$~` (bucsig) rune to be compiled correctly:
@@ -580,8 +599,8 @@ Recursive types almost always need to have a bunt specified using the `$~` (bucs
 --
 ```
 
-***source:*** *`~rovnys-ricfer`*\
-***context:*** *TODO*\
+***source:*** *`~rovnys-ricfer`* \
+***context:*** *TODO* \
 ***location:*** *TODO*
 
 ### Vanes: Behn inserts `src.bowl` into timer path

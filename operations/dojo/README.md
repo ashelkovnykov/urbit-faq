@@ -7,12 +7,13 @@ This section contains information about using the Dojo (the Urbit ship terminal)
 [Command: call thread from custom desk](#command-call-thread-from-custom-desk) \
 [Command: check if ship is live or fake](#command-check-if-ship-is-live-or-fake) \
 [Command: crash the pretty printer](#command-crash-the-pretty-printer) \
+[Command: `curl` from dojo](#command-curl-from-dojo) \
 [Command: get docket for application](#command-get-docket-for-application) \
-[Command: get latest hash of desk](#commands-get-latest-hash-of-desk) \
-[Command: poke an agent on another ship from dojo](#commands-poke-an-agent-on-another-ship-from-dojo) \
-[Command: print jammed noun to dojo](#commands-print-jammed-noun-to-dojo) \
-[Command: replace a broken vane on a ship]() \
-[Command: what do the different command symbols mean?](#commands-what-do-the-different-command-symbols-mean) \
+[Command: get latest hash of desk](#command-get-latest-hash-of-desk) \
+[Command: poke an agent on another ship from dojo](#command-poke-an-agent-on-another-ship-from-dojo) \
+[Command: print jammed noun to dojo](#command-print-jammed-noun-to-dojo) \
+[Command: replace a broken vane on a ship](#command-replace-a-broken-vane-on-a-ship) \
+[Command: what do the different command symbols mean?](#command-what-do-the-different-command-symbols-mean) \
 [Error: dojo stuck on `%dy-no-prompt`](#error-dojo-stuck-on-dy-no-prompt) \
 [Error: "leak" messages in dojo after Vere crash](#error-leak-messages-in-dojo-after-vere-crash) \
 [What does `|meld` do?](#what-does-meld-do) \
@@ -28,8 +29,8 @@ To call a thread `-foo` from the desk `%bar`, use the following command in the d
 > -bar!foo
 ```
 
-***source:*** *`~tinnus-napbus`*\
-***context:*** *TODO*\
+***source:*** *`~tinnus-napbus`* \
+***context:*** *TODO* \
 ***location:*** *TODO*
 
 ### Command: check if ship is live or fake
@@ -39,8 +40,8 @@ The following scry will return true (a.k.a. `%.y` a.k.a. `0`) if a ship is fake 
 .^(? %j /=fake=)
 ```
 
-***source:*** *`~tinnus-napbus`*\
-***context:*** *TODO*\
+***source:*** *`~tinnus-napbus`* \
+***context:*** *TODO* \
 ***location:*** *TODO*
 
 ### Command: crash the pretty printer
@@ -49,8 +50,80 @@ The following scry will return true (a.k.a. `%.y` a.k.a. `0`) if a ship is fake 
 - `|.(1)`
 - Generally, printing any type or trap will work
 
-***source:*** *`~sidnym-ladrut`, `~wispem-wantex`*\
-***context:*** *TODO*\
+***source:*** *`~sidnym-ladrut`, `~wispem-wantex`* \
+***context:*** *TODO* \
+***location:*** *TODO*
+
+### Command: `curl` from dojo
+
+You can get the response of an HTTP `curl` to a URL from dojo using the following syntax:
+
+```
+> +https://example.com
+
+HTTP 200
+age: 225736
+cache-control: max-age=604800
+content-type: text/html; charset=UTF-8
+date: Thu, 11 Apr 2024 00:43:37 GMT
+etag: "3147526947+gzip+ident"
+expires: Thu, 18 Apr 2024 00:43:37 GMT
+last-modified: Thu, 17 Oct 2019 07:18:26 GMT
+server: ECS (sed/58CC)
+vary: Accept-Encoding
+x-cache: HIT
+content-length: 1256
+
+<!doctype html>
+<html>
+<head>
+    <title>Example Domain</title>
+
+    <meta charset="utf-8" />
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style type="text/css">
+    body {
+        background-color: #f0f0f2;
+        margin: 0;
+        padding: 0;
+        font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+        
+    }
+    div {
+        width: 600px;
+        margin: 5em auto;
+        padding: 2em;
+        background-color: #fdfdff;
+        border-radius: 0.5em;
+        box-shadow: 2px 3px 7px 2px rgba(0,0,0,0.02);
+    }
+    a:link, a:visited {
+        color: #38488f;
+        text-decoration: none;
+    }
+    @media (max-width: 700px) {
+        div {
+            margin: 0 auto;
+            width: auto;
+        }
+    }
+    </style>    
+</head>
+
+<body>
+<div>
+    <h1>Example Domain</h1>
+    <p>This domain is for use in illustrative examples in documents. You may use this
+    domain in literature without prior coordination or asking for permission.</p>
+    <p><a href="https://www.iana.org/domains/example">More information...</a></p>
+</div>
+</body>
+</html>
+```
+
+***source:*** *`~lagrev-nocfep`* \
+***context:***  *NONE* \
 ***location:*** *TODO*
 
 ### Command: get docket for application
@@ -96,8 +169,8 @@ Ex: `:~bacdun/faucet &faucet-action [%open 0x0 0xdead.beef]`
 4. `cue` the loaded data: `(cue j)`
     1. Might need to skip over the first 5 bytes if it's a newt-encoded jammed noun: `(cue (rsh [3 5] j))`
 
-***source:*** *`~wicdev-wisryt`*\
-***context:*** *NONE*\
+***source:*** *`~wicdev-wisryt`* \
+***context:*** *NONE* \
 ***location:*** *TODO*
 
 ### Command: replace a broken vane on a ship

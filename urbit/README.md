@@ -5,9 +5,10 @@ This section contains miscellaneous tidbits about Urbit.
 ## Contents
 
 [Can I build a foreign desk using Clay?](#can-i-build-a-foreign-desk-using-clay) \
-[Debug dashboard](#debug-dashboard)\
+[Debug dashboard](#debug-dashboard) \
+[How do I stop publishing an application?](#how-do-i-stop-publishing-an-application) \
 [How do I update to a specific OTA?](#how-do-i-update-to-a-specific-ota) \
-[How does Vere bootstrap the Hoon compiler?]() \
+[How does Vere bootstrap the Hoon compiler?](#how-does-vere-bootstrap-the-hoon-compiler) \
 [I messaged my ship from a comet and saw a breach notification. What happened?](#i-messaged-my-ship-from-a-comet-and-saw-a-breach-notification-what-happened) \
 [Is a sequence of moves in an event guaranteed to terminate?](#is-a-sequence-of-moves-in-an-event-guaranteed-to-terminate) \
 [What are the Hoon naming conventions?](#what-are-the-hoon-naming-conventions) \
@@ -34,9 +35,17 @@ Every ship has a debugging dashboard available at `http://localhost:8080/~debug/
 - Behn timers
 - Incoming Eyre HTTP requests
 
-***source:*** *`~nospur-sontud`, `~wicdev-wisryt`*\
-***context:*** *NONE*\
+***source:*** *`~nospur-sontud`, `~wicdev-wisryt`* \
+***context:*** *NONE* \
 ***location:*** *TODO*
+
+### How do I stop publishing an application?
+
+`:treaty|unpublish %desk-name`
+
+***source:*** *`~lagrev-nocfep`* \
+***context:*** *NONE* \
+***location:*** https://docs.urbit.org/userspace/apps/reference/dist/glob
 
 ### How do I update to a specific OTA?
 
