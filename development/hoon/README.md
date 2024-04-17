@@ -24,6 +24,7 @@ This section contains information about Hoon/Arvo development.
 [Gates: is it bad to recurse on a wet gate?](#gates-is-it-bad-to-recurse-on-a-wet-gate) \
 [Gates: naming a `|-` gate used as a loop](#gates-naming-a---gate-used-as-a-loop) \
 [Jets: what are jet labels?](#jets-what-are-jet-labels) \
+[Molds: bunt value of a mold](#molds-bunt-value-of-a-mold) \
 [Operators: what does the `,` operator do?](#operators-what-does-the--operator-do) \
 [Parsing: `cord` vs. `tape`](#parsing-cord-vs-tape) \
 [Rendering: difference between `%palm` and `%rose` in `$tank`](#rendering-difference-between-palm-and-rose-in-tank) \
@@ -382,9 +383,23 @@ jet may use as a part of its implementation. An example for why one may wish to 
 only a partial implementation, so it wants to call the raw Hoon code for a subset of its domain. Another example is that
 the jet may only perform pre / post processing on input that is computed by raw Hoon.
 
-***source:*** *`finmep-lanteb`*\
+***source:*** *`finmep-lanteb`* \
 ***context:*** https://docs.urbit.org/language/hoon/reference/rune/sig#-sigcen \
 ***location:*** *TODO*
+
+### Molds: bunt value of a mold
+
+By default, molds bunt to their final type case, e.g.:
+
+```
+> =mold $?  @ux  [%b @ub]  [%d @ud]  ==
+> *mold
+[%d 0]
+```
+
+***source:*** *`master-morzod`* \
+***context:*** https://docs.urbit.org/courses/hoon-school/E-types \
+***location:*** [Mold](https://docs.urbit.org/glossary/mold), [Bunt](https://docs.urbit.org/glossary/bunt)
 
 ### Operators: what does the `,` operator do?
 
