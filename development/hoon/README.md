@@ -1,7 +1,7 @@
 # Hoon
 
 This section contains information about Hoon/Arvo development.
-``
+
 ## Contents
 
 [Auras: how does Urbit time work?](#auras-how-does-urbit-time-work) \
@@ -18,6 +18,8 @@ This section contains information about Hoon/Arvo development.
 [Error: `fire-core -fork-type.#! expected-fork-to-be-core fire-type`](#error-fire-core--fork-type-expected-fork-to-be-core-fire-type) \
 [Error: `fuse-loop`](#error-fuse-loop) \
 [Error: `mint-vain` or `-need.[i=@ t=it(@)] -have.%~` when using `list`](#error-mint-vain-or--needi-tit--have-when-using-list) \
+[Functions: how does `+cap` work?](#functions-how-does-cap-work) \
+[Functions: how does `+mas` work?](#functions-how-does-mas-work) \
 [Functions: when should `homo` be used?](#functions-when-should-homo-be-used) \
 [Gates: core vs. door, gate vs. trap](#gates-core-vs-door-gate-vs-trap) \
 [Gates: gates with default values](#gates-gates-with-default-values) \
@@ -295,6 +297,51 @@ should provide additional context.
 - https://web.archive.org/web/20140424223310/http://urbit.org/doc/hoon/tut/7/
 
 ***location:*** *TODO*
+
+### Functions: how does `+cap` work?
+
+First, see the section below on how `+mas` works. Then, it's a similar idea:
+`+cap` determines whether the index is within the head or the tail of a tree,
+therefore (using the bit labeling from the `+mas` example), all we care about is
+bit `a`, representing the first "turn". If `a` is `0`, then the index is in the
+head; otherwise, it's in the tail.
+
+***source:*** *`~finmep-lanteb`* \
+***context:*** NONE \
+***location:*** https://docs.urbit.org/language/hoon/reference/stdlib/1b#cap
+
+### Functions: how does `+mas` work?
+
+If the bits of the atom passed in to `+mas` as input look like the following:
+```
+1abc...z
+```
+(ex: `13 = 0b1101`, therefore `a = 1`, `b = 0`, and `c = 1`), then what `+mas`
+is really doing is returning the atom made from bits:
+```
+1bc...z
+```
+(ex: `(mas 13) = 5 = 0b101`)
+
+This is because the bits of an atom representing an index encode how to walk
+through the tree in the following way:
+```
+        1101
+        ^^^^
+        ||||
+RIGHT --+┘||
+LEFT  --+-┘|
+RIGHT --+--┘
+DONE  --┘
+```
+
+Since `+mas` is computing the relative index within either the head or tail, we
+don't care about the first "turn" being right or left, so we drop the bit
+entirely.
+
+***source:*** *`~finmep-lanteb`* \
+***context:*** NONE \
+***location:*** https://docs.urbit.org/language/hoon/reference/stdlib/1b#mas
 
 ### Functions: when should `homo` be used?
 
